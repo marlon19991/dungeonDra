@@ -4,7 +4,9 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import path from 'path';
 import { CharacterController } from '../controllers/CharacterController';
+import { StoryController } from '../controllers/StoryController';
 import { createCharacterRoutes } from './routes/characterRoutes';
+import { createStoryRoutes } from './routes/storyRoutes';
 
 export class WebServer {
   private app: express.Application;
@@ -12,6 +14,7 @@ export class WebServer {
 
   constructor(
     private characterController: CharacterController,
+    private storyController: StoryController,
     port: number = 3000
   ) {
     this.app = express();
@@ -31,7 +34,10 @@ export class WebServer {
 
   private setupRoutes(): void {
     const characterRoutes = createCharacterRoutes(this.characterController);
+    const storyRoutes = createStoryRoutes(this.storyController);
+    
     this.app.use('/api', characterRoutes);
+    this.app.use('/api', storyRoutes);
 
     this.app.get('/api/health', (req, res) => {
       res.json({ status: 'OK', message: 'D&D Game API is running' });
@@ -43,6 +49,25 @@ export class WebServer {
         'bard', 'druid', 'monk', 'paladin', 'sorcerer', 'warlock'
       ];
       res.json(classes);
+    });
+
+    this.app.post('/api/ai/test-connection', async (req, res) => {
+      const apiKey = req.headers['x-gemini-api-key'] as string;
+      if (!apiKey) {
+        return res.status(400).json({ error: 'Gemini API key required' });
+      }
+      
+      try {
+        const { GeminiAIService } = await import('../../infrastructure/services/GeminiAIService');
+        const geminiService = new GeminiAIService({ apiKey });
+        const isConnected = await geminiService.testConnection();
+        res.json({ connected: isConnected });
+      } catch (error) {
+        res.status(400).json({ 
+          connected: false, 
+          error: 'Failed to connect to Gemini API' 
+        });
+      }
     });
   }
 

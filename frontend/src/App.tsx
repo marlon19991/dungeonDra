@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { CharacterCreation } from './pages/CharacterCreation';
 import { CharacterList } from './pages/CharacterList';
 import { CombatSystem } from './pages/CombatSystem';
+import { StoryMode } from './pages/StoryMode';
 import './styles/App.css';
 
-type ActiveTab = 'list' | 'create' | 'combat';
+type ActiveTab = 'list' | 'create' | 'combat' | 'story';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ActiveTab>('list');
@@ -21,6 +22,8 @@ const App: React.FC = () => {
         return <CharacterCreation onCharacterCreated={handleCharacterCreated} />;
       case 'combat':
         return <CombatSystem />;
+      case 'story':
+        return <StoryMode />;
       case 'list':
       default:
         return <CharacterList refreshTrigger={refreshTrigger} />;
@@ -52,6 +55,12 @@ const App: React.FC = () => {
           onClick={() => setActiveTab('combat')}
         >
           ⚔️ Combat System
+        </button>
+        <button
+          className={`nav-button ${activeTab === 'story' ? 'active' : ''}`}
+          onClick={() => setActiveTab('story')}
+        >
+          📖 AI Stories
         </button>
       </nav>
 
