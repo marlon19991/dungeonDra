@@ -214,10 +214,17 @@ OPTIONS:
 
   async testConnection(): Promise<boolean> {
     try {
-      const result = await this.model.generateContent('Test prompt: respond with "Connection successful"');
+      // Simple test with short timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      const result = await this.model.generateContent('Hi');
+      clearTimeout(timeoutId);
+      
       const response = await result.response;
-      return response.text().includes('successful');
+      return response.text().length > 0;
     } catch (error) {
+      console.log('Gemini connection test failed:', error instanceof Error ? error.message : 'Unknown error');
       return false;
     }
   }

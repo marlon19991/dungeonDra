@@ -20,7 +20,7 @@ export const AIConfiguration: React.FC<AIConfigurationProps> = ({ onConfigured }
     }
   }, []);
 
-  const handleSaveApiKey = async () => {
+  const handleSaveApiKey = async (skipTest = false) => {
     if (!apiKey.trim()) {
       setError('API key cannot be empty');
       return;
@@ -33,20 +33,32 @@ export const AIConfiguration: React.FC<AIConfigurationProps> = ({ onConfigured }
     try {
       storyApiService.setGeminiApiKey(apiKey.trim());
       
-      // Test the connection
-      const isConnected = await storyApiService.testAIConnection();
+      if (skipTest) {
+        setIsConfigured(true);
+        setSuccess('Gemini API key saved! (Connection not tested)');
+        onConfigured?.();
+        return;
+      }
+      
+      // Test the connection with timeout
+      const testPromise = storyApiService.testAIConnection();
+      const timeoutPromise = new Promise<boolean>((_, reject) =>
+        setTimeout(() => reject(new Error('Connection test timed out')), 10000)
+      );
+      
+      const isConnected = await Promise.race([testPromise, timeoutPromise]);
       
       if (isConnected) {
         setIsConfigured(true);
         setSuccess('Gemini API key configured successfully!');
         onConfigured?.();
       } else {
-        setError('Failed to connect to Gemini API. Please check your API key.');
-        storyApiService.clearGeminiApiKey();
+        setError('Failed to connect to Gemini API. Please check your API key or try skipping the test.');
+        // Don't clear API key on failed test, let user decide
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to configure API key');
-      storyApiService.clearGeminiApiKey();
+      setError(err instanceof Error ? err.message : 'Failed to configure API key. You can skip the test if you\'re sure the key is correct.');
+      // Don't clear API key on failed test, let user decide
     } finally {
       setTesting(false);
     }
@@ -118,13 +130,21 @@ export const AIConfiguration: React.FC<AIConfigurationProps> = ({ onConfigured }
         </small>
       </div>
 
-      <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+      <div style={{ display: 'flex', gap: '10px', marginTop: '20px', flexWrap: 'wrap' }}>
         <button 
           className="button" 
-          onClick={handleSaveApiKey}
+          onClick={() => handleSaveApiKey(false)}
           disabled={testing || !apiKey.trim()}
         >
-          {testing ? 'Testing...' : '🔗 Connect to Gemini'}
+          {testing ? 'Testing connection...' : '🔗 Connect to Gemini'}
+        </button>
+        
+        <button 
+          className="button secondary" 
+          onClick={() => handleSaveApiKey(true)}
+          disabled={testing || !apiKey.trim()}
+        >
+          💾 Save Without Test
         </button>
         
         {apiKey && (

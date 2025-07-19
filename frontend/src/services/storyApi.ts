@@ -75,7 +75,9 @@ class StoryApiService {
 
   async testAIConnection(): Promise<boolean> {
     try {
-      const response = await this.fetch<{ connected: boolean }>('/ai/test-connection');
+      const response = await this.fetch<{ connected: boolean }>('/ai/test-connection', {
+        method: 'POST'
+      });
       return response.connected;
     } catch {
       return false;
