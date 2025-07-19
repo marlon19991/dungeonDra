@@ -14,7 +14,6 @@ import { GetStoryUseCase } from './application/use-cases/GetStoryUseCase';
 import { CharacterController } from './presentation/controllers/CharacterController';
 import { StoryController } from './presentation/controllers/StoryController';
 import { WebServer } from './presentation/web/server';
-import { setGlobalRepositories } from './presentation/web/routes/storyRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -25,23 +24,18 @@ async function startWebServer(): Promise<void> {
   const characterRepository = new FileCharacterRepository(fileStorageService);
   const storyRepository = new InMemoryStoryRepository();
 
-  // Set global repositories for dynamic story controller creation
-  setGlobalRepositories(storyRepository, characterRepository);
-
-  // Initialize AI service with a placeholder - will be configured via frontend
-  const geminiApiKey = process.env.GEMINI_API_KEY || 'placeholder';
-  let geminiAIService: GeminiAIService;
-  let storyGenerationService: StoryGenerationService;
+  // Initialize AI service from .env file
+  const geminiApiKey = process.env.GEMINI_API_KEY;
   
-  try {
-    geminiAIService = new GeminiAIService({ apiKey: geminiApiKey });
-    storyGenerationService = new StoryGenerationService(geminiAIService);
-  } catch (error) {
-    console.log('⚠️  Gemini AI not configured. Stories will need API key from frontend.');
-    // Create a dummy service that will be replaced when API key is provided
-    geminiAIService = new GeminiAIService({ apiKey: 'dummy' });
-    storyGenerationService = new StoryGenerationService(geminiAIService);
+  if (!geminiApiKey || geminiApiKey === 'your_gemini_api_key_here') {
+    console.log('❌ GEMINI_API_KEY not configured in .env file');
+    console.log('📝 Please add your Gemini API key to the .env file:');
+    console.log('   GEMINI_API_KEY=your_actual_api_key_here');
+    process.exit(1);
   }
+
+  const geminiAIService = new GeminiAIService({ apiKey: geminiApiKey });
+  const storyGenerationService = new StoryGenerationService(geminiAIService);
 
   // Character use cases
   const createCharacterUseCase = new CreateCharacterUseCase(characterRepository);

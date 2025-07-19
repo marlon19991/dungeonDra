@@ -1,52 +1,12 @@
 import { Router } from 'express';
 import { StoryController } from '../../controllers/StoryController';
-import { geminiMiddleware, RequestWithAI } from '../middleware/geminiMiddleware';
-import { StoryGenerationService } from '../../../domain/services/StoryGenerationService';
-import { CreateStoryUseCase } from '../../../application/use-cases/CreateStoryUseCase';
-import { ContinueStoryUseCase } from '../../../application/use-cases/ContinueStoryUseCase';
-import { GetStoryUseCase } from '../../../application/use-cases/GetStoryUseCase';
-
-// Import repositories (will be passed from main)
-let globalStoryRepository: any;
-let globalCharacterRepository: any;
-
-export function setGlobalRepositories(storyRepo: any, charRepo: any) {
-  globalStoryRepository = storyRepo;
-  globalCharacterRepository = charRepo;
-}
-
-function createDynamicStoryController(storyGenerationService: StoryGenerationService): StoryController {
-  const createStoryUseCase = new CreateStoryUseCase(
-    globalStoryRepository,
-    globalCharacterRepository,
-    storyGenerationService
-  );
-  const continueStoryUseCase = new ContinueStoryUseCase(
-    globalStoryRepository,
-    globalCharacterRepository,
-    storyGenerationService
-  );
-  const getStoryUseCase = new GetStoryUseCase(globalStoryRepository);
-
-  return new StoryController(
-    createStoryUseCase,
-    continueStoryUseCase,
-    getStoryUseCase
-  );
-}
 
 export function createStoryRoutes(storyController: StoryController): Router {
   const router = Router();
 
-  router.post('/stories', geminiMiddleware, async (req: RequestWithAI, res) => {
+  router.post('/stories', async (req, res) => {
     try {
-      // Create a temporary controller with the dynamic AI service
-      if (!req.storyGenerationService) {
-        return res.status(500).json({ error: 'AI service not initialized' });
-      }
-      
-      const dynamicStoryController = createDynamicStoryController(req.storyGenerationService);
-      const story = await dynamicStoryController.createStory(req.body);
+      const story = await storyController.createStory(req.body);
       res.status(201).json(story);
     } catch (error) {
       res.status(400).json({ 
@@ -99,21 +59,15 @@ export function createStoryRoutes(storyController: StoryController): Router {
     }
   });
 
-  router.post('/stories/:id/continue', geminiMiddleware, async (req: RequestWithAI, res) => {
+  router.post('/stories/:id/continue', async (req, res) => {
     try {
-      if (!req.storyGenerationService) {
-        return res.status(500).json({ error: 'AI service not initialized' });
-      }
-      
-      const dynamicStoryController = createDynamicStoryController(req.storyGenerationService);
-      
       const continueDto = {
         storyId: req.params.id,
         selectedOption: req.body.selectedOption,
         customAction: req.body.customAction
       };
       
-      const story = await dynamicStoryController.continueStory(continueDto);
+      const story = await storyController.continueStory(continueDto);
       res.json(story);
     } catch (error) {
       res.status(400).json({ 

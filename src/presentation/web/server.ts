@@ -51,24 +51,6 @@ export class WebServer {
       res.json(classes);
     });
 
-    this.app.post('/api/ai/test-connection', async (req, res) => {
-      const apiKey = req.headers['x-gemini-api-key'] as string;
-      if (!apiKey) {
-        return res.status(400).json({ error: 'Gemini API key required' });
-      }
-      
-      try {
-        const { GeminiAIService } = await import('../../infrastructure/services/GeminiAIService');
-        const geminiService = new GeminiAIService({ apiKey });
-        const isConnected = await geminiService.testConnection();
-        res.json({ connected: isConnected });
-      } catch (error) {
-        res.status(400).json({ 
-          connected: false, 
-          error: 'Failed to connect to Gemini API' 
-        });
-      }
-    });
   }
 
   private setupStaticFiles(): void {

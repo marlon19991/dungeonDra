@@ -3,7 +3,6 @@ import { Character } from '../types/Character';
 import { Story, CreateStoryData } from '../types/Story';
 import { apiService } from '../services/api';
 import { storyApiService } from '../services/storyApi';
-import { AIConfiguration } from '../components/AIConfiguration';
 
 export const StoryMode: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -12,18 +11,13 @@ export const StoryMode: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [currentView, setCurrentView] = useState<'config' | 'create' | 'list' | 'play'>('config');
+  const [currentView, setCurrentView] = useState<'create' | 'list' | 'play'>('list');
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [customAction, setCustomAction] = useState('');
 
   useEffect(() => {
     loadCharacters();
     loadStories();
-    
-    // Check if AI is already configured
-    if (storyApiService.hasApiKey()) {
-      setCurrentView('list');
-    }
   }, []);
 
   const loadCharacters = async () => {
@@ -41,14 +35,9 @@ export const StoryMode: React.FC = () => {
       const storiesData = await storyApiService.getStories();
       setStories(storiesData);
     } catch (err) {
-      // Stories might not load if AI not configured yet
+      setError('Could not load stories. Make sure the AI service is configured in the server.');
       console.log('Could not load stories:', err);
     }
-  };
-
-  const handleAIConfigured = () => {
-    setCurrentView('list');
-    loadStories();
   };
 
   const handleCreateStory = async () => {
@@ -112,9 +101,6 @@ export const StoryMode: React.FC = () => {
     }
   };
 
-  const renderConfiguration = () => (
-    <AIConfiguration onConfigured={handleAIConfigured} />
-  );
 
   const renderStoryCreation = () => (
     <div className="card">
@@ -383,8 +369,6 @@ export const StoryMode: React.FC = () => {
 
   const renderContent = () => {
     switch (currentView) {
-      case 'config':
-        return renderConfiguration();
       case 'create':
         return renderStoryCreation();
       case 'play':
@@ -398,28 +382,20 @@ export const StoryMode: React.FC = () => {
   return (
     <div>
       {/* Navigation */}
-      {storyApiService.hasApiKey() && currentView !== 'config' && (
-        <nav className="navigation">
-          <button
-            className={`nav-button ${currentView === 'list' ? 'active' : ''}`}
-            onClick={() => setCurrentView('list')}
-          >
-            📚 Story List
-          </button>
-          <button
-            className={`nav-button ${currentView === 'create' ? 'active' : ''}`}
-            onClick={() => setCurrentView('create')}
-          >
-            ➕ New Story
-          </button>
-          <button
-            className={`nav-button ${currentView === 'config' ? 'active' : ''}`}
-            onClick={() => setCurrentView('config')}
-          >
-            ⚙️ AI Config
-          </button>
-        </nav>
-      )}
+      <nav className="navigation">
+        <button
+          className={`nav-button ${currentView === 'list' ? 'active' : ''}`}
+          onClick={() => setCurrentView('list')}
+        >
+          📚 Story List
+        </button>
+        <button
+          className={`nav-button ${currentView === 'create' ? 'active' : ''}`}
+          onClick={() => setCurrentView('create')}
+        >
+          ➕ New Story
+        </button>
+      </nav>
 
       {renderContent()}
     </div>

@@ -1,32 +1,12 @@
-import { Story, CreateStoryData, ContinueStoryData, AIConfiguration } from '../types/Story';
+import { Story, CreateStoryData, ContinueStoryData } from '../types/Story';
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
 class StoryApiService {
-  private geminiApiKey: string = '';
-
-  setGeminiApiKey(apiKey: string): void {
-    this.geminiApiKey = apiKey;
-    localStorage.setItem('gemini-api-key', apiKey);
-  }
-
-  getGeminiApiKey(): string {
-    if (!this.geminiApiKey) {
-      this.geminiApiKey = localStorage.getItem('gemini-api-key') || '';
-    }
-    return this.geminiApiKey;
-  }
-
-  clearGeminiApiKey(): void {
-    this.geminiApiKey = '';
-    localStorage.removeItem('gemini-api-key');
-  }
-
   private async fetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       headers: {
         'Content-Type': 'application/json',
-        'X-Gemini-API-Key': this.getGeminiApiKey(),
         ...options?.headers,
       },
       ...options,
@@ -73,20 +53,6 @@ class StoryApiService {
     });
   }
 
-  async testAIConnection(): Promise<boolean> {
-    try {
-      const response = await this.fetch<{ connected: boolean }>('/ai/test-connection', {
-        method: 'POST'
-      });
-      return response.connected;
-    } catch {
-      return false;
-    }
-  }
-
-  hasApiKey(): boolean {
-    return this.getGeminiApiKey().length > 0;
-  }
 }
 
 export const storyApiService = new StoryApiService();
