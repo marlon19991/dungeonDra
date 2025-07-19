@@ -1,3 +1,5 @@
+import { DiceType } from '../entities/Dice';
+
 export interface DiceRoll {
   diceType: string; // 'd20', 'd6', etc.
   roll: number;
@@ -17,6 +19,15 @@ export interface DiceCheck {
 }
 
 export class DiceService {
+
+  private static instance: DiceService;
+
+  static getInstance(): DiceService {
+    if (!DiceService.instance) {
+      DiceService.instance = new DiceService();
+    }
+    return DiceService.instance;
+  }
   
   rollDice(sides: number): number {
     return Math.floor(Math.random() * sides) + 1;
@@ -44,6 +55,21 @@ export class DiceService {
 
   rollD12(): number {
     return this.rollDice(12);
+  }
+
+  rollAbilityScore(): number {
+    const rolls = [this.rollD6(), this.rollD6(), this.rollD6(), this.rollD6()];
+    rolls.sort((a, b) => a - b);
+    return rolls.slice(1).reduce((sum, r) => sum + r, 0);
+  }
+
+  rollHitPoints(dice: DiceType, modifier: number): number {
+    const roll = this.rollDice(dice);
+    return Math.max(1, roll + modifier);
+  }
+
+  rollInitiative(modifier: number): number {
+    return this.rollWithModifier(20, modifier).total;
   }
 
   rollWithModifier(sides: number, modifier: number): DiceRoll {
