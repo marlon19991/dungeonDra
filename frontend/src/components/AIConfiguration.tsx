@@ -136,7 +136,7 @@ export const AIConfiguration: React.FC<AIConfigurationProps> = ({ onConfigured }
           onClick={() => handleSaveApiKey(false)}
           disabled={testing || !apiKey.trim()}
         >
-          {testing ? 'Testing connection...' : '🔗 Connect to Gemini'}
+{testing ? '🔄 Testing connection...' : '🔗 Test & Connect'}
         </button>
         
         <button 
@@ -173,6 +173,16 @@ export const AIConfiguration: React.FC<AIConfigurationProps> = ({ onConfigured }
           <li>Copy the generated API key</li>
           <li>Paste it in the field above</li>
         </ol>
+        
+        <div style={{ marginTop: '15px', padding: '10px', background: 'rgba(255, 255, 255, 0.05)', borderRadius: '6px' }}>
+          <strong>💡 Troubleshooting:</strong>
+          <ul style={{ marginTop: '5px', paddingLeft: '20px' }}>
+            <li>If connection test fails, try "Save Without Test"</li>
+            <li>Make sure your API key has Gemini API access enabled</li>
+            <li>Check your internet connection</li>
+            <li>API key should start with "AIza..."</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

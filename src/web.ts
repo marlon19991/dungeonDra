@@ -14,6 +14,7 @@ import { GetStoryUseCase } from './application/use-cases/GetStoryUseCase';
 import { CharacterController } from './presentation/controllers/CharacterController';
 import { StoryController } from './presentation/controllers/StoryController';
 import { WebServer } from './presentation/web/server';
+import { setGlobalRepositories } from './presentation/web/routes/storyRoutes';
 
 // Load environment variables
 dotenv.config();
@@ -23,6 +24,9 @@ async function startWebServer(): Promise<void> {
   const fileStorageService = new FileStorageService();
   const characterRepository = new FileCharacterRepository(fileStorageService);
   const storyRepository = new InMemoryStoryRepository();
+
+  // Set global repositories for dynamic story controller creation
+  setGlobalRepositories(storyRepository, characterRepository);
 
   // Initialize AI service with a placeholder - will be configured via frontend
   const geminiApiKey = process.env.GEMINI_API_KEY || 'placeholder';

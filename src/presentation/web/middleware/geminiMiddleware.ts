@@ -21,8 +21,9 @@ export function geminiMiddleware(req: RequestWithAI, res: Response, next: NextFu
     req.storyGenerationService = new StoryGenerationService(geminiAIService);
     next();
   } catch (error) {
+    console.error('Gemini middleware error:', error);
     res.status(400).json({ 
-      error: 'Invalid Gemini API key configuration' 
+      error: `Invalid Gemini API key configuration: ${error instanceof Error ? error.message : 'Unknown error'}` 
     });
     return;
   }
