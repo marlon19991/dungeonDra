@@ -33,8 +33,8 @@ const App: React.FC = () => {
   return (
     <div className="app">
       <header className="header">
-        <h1>🐉 Dungeons & Dragons</h1>
-        <p>Clean Architecture Game Interface</p>
+        <h1>🐉 Calabozos y Dragones</h1>
+        <p>Interfaz de Juego con Arquitectura Limpia</p>
       </header>
 
       <nav className="navigation">
@@ -42,25 +42,25 @@ const App: React.FC = () => {
           className={`nav-button ${activeTab === 'list' ? 'active' : ''}`}
           onClick={() => setActiveTab('list')}
         >
-          📋 Character List
+          📋 Lista de Personajes
         </button>
         <button
           className={`nav-button ${activeTab === 'create' ? 'active' : ''}`}
           onClick={() => setActiveTab('create')}
         >
-          ➕ Create Character
+          ➕ Crear Personaje
         </button>
         <button
           className={`nav-button ${activeTab === 'combat' ? 'active' : ''}`}
           onClick={() => setActiveTab('combat')}
         >
-          ⚔️ Combat System
+          ⚔️ Sistema de Combate
         </button>
         <button
           className={`nav-button ${activeTab === 'story' ? 'active' : ''}`}
           onClick={() => setActiveTab('story')}
         >
-          📖 AI Stories
+          📖 Historias IA
         </button>
       </nav>
 
@@ -75,7 +75,7 @@ const App: React.FC = () => {
         opacity: 0.7,
         fontSize: '0.9rem'
       }}>
-        <p>Built with Clean Architecture & SOLID Principles</p>
+        <p>Construido con Arquitectura Limpia y Principios SOLID</p>
         <p>TypeScript • React • Express • Node.js</p>
       </footer>
     </div>

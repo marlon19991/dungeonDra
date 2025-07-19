@@ -44,19 +44,23 @@ export class ContinueStoryUseCase {
       let playerAction: string;
       let generationResult: any;
 
+      const pacing = dto.pacing || 'rapido';
+      
       if (dto.selectedOption) {
         playerAction = dto.selectedOption;
         generationResult = await this.storyGenerationService.continueWithChoice(
           previousStory,
           dto.selectedOption,
-          aliveCharacters
+          aliveCharacters,
+          pacing
         );
       } else if (dto.customAction) {
         playerAction = dto.customAction;
         generationResult = await this.storyGenerationService.continueWithCustomAction(
           previousStory,
           dto.customAction,
-          aliveCharacters
+          aliveCharacters,
+          pacing
         );
       } else {
         throw new Error('Either selectedOption or customAction must be provided');

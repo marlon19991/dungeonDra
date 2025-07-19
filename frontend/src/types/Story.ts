@@ -26,12 +26,15 @@ export interface Story {
 export interface CreateStoryData {
   characterIds: string[];
   title?: string;
+  theme?: string;
+  pacing?: 'rapido' | 'detallado';
 }
 
 export interface ContinueStoryData {
   storyId: string;
   selectedOption?: string;
   customAction?: string;
+  pacing?: 'rapido' | 'detallado';
 }
 
 export interface AIConfiguration {

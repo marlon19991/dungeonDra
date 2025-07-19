@@ -14,6 +14,8 @@ export const StoryMode: React.FC = () => {
   const [currentView, setCurrentView] = useState<'create' | 'list' | 'play'>('list');
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [customAction, setCustomAction] = useState('');
+  const [storyTheme, setStoryTheme] = useState('');
+  const [pacing, setPacing] = useState<'rapido' | 'detallado'>('rapido');
 
   useEffect(() => {
     loadCharacters();
@@ -26,7 +28,7 @@ export const StoryMode: React.FC = () => {
       const aliveCharacters = charactersData.filter(char => char.isAlive);
       setCharacters(aliveCharacters);
     } catch (err) {
-      setError('Failed to load characters');
+      setError('Error al cargar personajes');
     }
   };
 
@@ -35,14 +37,14 @@ export const StoryMode: React.FC = () => {
       const storiesData = await storyApiService.getStories();
       setStories(storiesData);
     } catch (err) {
-      setError('Could not load stories. Make sure the AI service is configured in the server.');
+      setError('No se pudieron cargar las historias. Asegúrate de que el servicio de IA esté configurado en el servidor.');
       console.log('Could not load stories:', err);
     }
   };
 
   const handleCreateStory = async () => {
     if (selectedCharacters.length === 0) {
-      setError('Please select at least one character');
+      setError('Por favor selecciona al menos un personaje');
       return;
     }
 
@@ -52,16 +54,18 @@ export const StoryMode: React.FC = () => {
 
     try {
       const createData: CreateStoryData = {
-        characterIds: selectedCharacters
+        characterIds: selectedCharacters,
+        theme: storyTheme.trim() || undefined,
+        pacing: pacing
       };
 
       const newStory = await storyApiService.createStory(createData);
       setStories(prev => [newStory, ...prev]);
       setSelectedStory(newStory);
       setCurrentView('play');
-      setSuccess('Story created successfully!');
+      setSuccess('¡Historia creada exitosamente!');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create story');
+      setError(err instanceof Error ? err.message : 'Error al crear la historia');
     } finally {
       setLoading(false);
     }
@@ -72,7 +76,7 @@ export const StoryMode: React.FC = () => {
 
     const action = selectedOption || customAction.trim();
     if (!action) {
-      setError('Please select an option or enter a custom action');
+      setError('Por favor selecciona una opción o ingresa una acción personalizada');
       return;
     }
 
@@ -83,7 +87,8 @@ export const StoryMode: React.FC = () => {
       const continueData = {
         storyId: selectedStory.id,
         selectedOption: selectedOption,
-        customAction: selectedOption ? undefined : customAction.trim()
+        customAction: selectedOption ? undefined : customAction.trim(),
+        pacing: pacing
       };
 
       const updatedStory = await storyApiService.continueStory(continueData);
@@ -95,7 +100,7 @@ export const StoryMode: React.FC = () => {
         prev.map(story => story.id === updatedStory.id ? updatedStory : story)
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to continue story');
+      setError(err instanceof Error ? err.message : 'Error al continuar la historia');
     } finally {
       setLoading(false);
     }
@@ -104,20 +109,20 @@ export const StoryMode: React.FC = () => {
 
   const renderStoryCreation = () => (
     <div className="card">
-      <h2>📖 Create New Adventure</h2>
-      <p>Select characters to start a new AI-generated story adventure.</p>
+      <h2>📖 Crear Nueva Aventura</h2>
+      <p>Selecciona personajes para comenzar una nueva historia de aventura generada por IA.</p>
 
       {error && <div className="error">{error}</div>}
       {success && <div className="success">{success}</div>}
 
       {characters.length === 0 ? (
         <div className="error">
-          No living characters available. Create some characters first!
+          No hay personajes vivos disponibles. ¡Crea algunos personajes primero!
         </div>
       ) : (
         <>
           <div style={{ marginBottom: '20px' }}>
-            <h3>Select Characters for the Adventure:</h3>
+            <h3>Selecciona Personajes para la Aventura:</h3>
             <div className="character-grid">
               {characters.map(character => (
                 <div
@@ -140,11 +145,57 @@ export const StoryMode: React.FC = () => {
                   <div className="character-name">{character.name}</div>
                   <div className="character-class">{character.characterClass}</div>
                   <div className="stat-row">
-                    <span>Level {character.level}</span>
+                    <span>Nivel {character.level}</span>
                     <span>{character.hitPoints.current}/{character.hitPoints.max} HP</span>
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Opciones de Personalización */}
+          <div style={{ marginBottom: '20px' }}>
+            <h3>Personaliza tu Aventura:</h3>
+            
+            <div className="form-group">
+              <label htmlFor="storyTheme">Tema de la Historia (opcional):</label>
+              <input
+                type="text"
+                id="storyTheme"
+                value={storyTheme}
+                onChange={(e) => setStoryTheme(e.target.value)}
+                placeholder="Ej: aventura en una mazmorra antigua, rescate de un pueblo, búsqueda de un tesoro..."
+                disabled={loading}
+                style={{ 
+                  width: '100%', 
+                  padding: '10px', 
+                  borderRadius: '6px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  color: 'white'
+                }}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="pacing">Ritmo de la Historia:</label>
+              <select
+                id="pacing"
+                value={pacing}
+                onChange={(e) => setPacing(e.target.value as 'rapido' | 'detallado')}
+                disabled={loading}
+                style={{ 
+                  width: '100%', 
+                  padding: '10px', 
+                  borderRadius: '6px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  color: 'white'
+                }}
+              >
+                <option value="rapido">⚡ Rápido - Acción directa, textos concisos</option>
+                <option value="detallado">📚 Detallado - Más atmósfera y descripción</option>
+              </select>
             </div>
           </div>
 
@@ -154,14 +205,18 @@ export const StoryMode: React.FC = () => {
               onClick={handleCreateStory}
               disabled={loading || selectedCharacters.length === 0}
             >
-              {loading ? 'Generating...' : '🎭 Start Adventure'}
+              {loading ? 'Generando...' : '🎭 Iniciar Aventura'}
             </button>
             <button 
               className="button secondary" 
-              onClick={() => setSelectedCharacters([])}
+              onClick={() => {
+                setSelectedCharacters([]);
+                setStoryTheme('');
+                setPacing('rapido');
+              }}
               disabled={loading}
             >
-              Clear Selection
+              Limpiar Todo
             </button>
           </div>
         </>
@@ -172,28 +227,28 @@ export const StoryMode: React.FC = () => {
   const renderStoryList = () => (
     <div>
       <div className="card">
-        <h2>📚 Adventure Stories</h2>
-        <p>Manage your AI-generated adventure stories.</p>
+        <h2>📚 Historias de Aventura</h2>
+        <p>Administra tus historias de aventura generadas por IA.</p>
         
         <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
           <button 
             className="button" 
             onClick={() => setCurrentView('create')}
           >
-            ➕ New Adventure
+            ➕ Nueva Aventura
           </button>
           <button 
             className="button secondary" 
             onClick={loadStories}
           >
-            🔄 Refresh
+            🔄 Actualizar
           </button>
         </div>
       </div>
 
       {stories.length === 0 ? (
         <div className="card">
-          <p>No stories yet. Create your first adventure!</p>
+          <p>Aún no hay historias. ¡Crea tu primera aventura!</p>
         </div>
       ) : (
         <div className="character-grid">
@@ -201,12 +256,12 @@ export const StoryMode: React.FC = () => {
             <div key={story.id} className="character-card">
               <div className="character-name">{story.title}</div>
               <div className="stat-row">
-                <span>Chapters: {story.chapterCount}</span>
-                <span>{story.isActive ? '🟢 Active' : '🔴 Ended'}</span>
+                <span>Capítulos: {story.chapterCount}</span>
+                <span>{story.isActive ? '🟢 Activa' : '🔴 Terminada'}</span>
               </div>
               <div className="stat-row">
-                <span>Characters: {story.characterIds.length}</span>
-                <span>Created: {new Date(story.createdAt).toLocaleDateString()}</span>
+                <span>Personajes: {story.characterIds.length}</span>
+                <span>Creada: {new Date(story.createdAt).toLocaleDateString()}</span>
               </div>
               
               <div style={{ marginTop: '15px', display: 'flex', gap: '10px' }}>
@@ -217,7 +272,7 @@ export const StoryMode: React.FC = () => {
                     setCurrentView('play');
                   }}
                 >
-                  {story.canContinue ? '▶️ Continue' : '📖 Read'}
+                  {story.canContinue ? '▶️ Continuar' : '📖 Leer'}
                 </button>
               </div>
             </div>
@@ -241,13 +296,13 @@ export const StoryMode: React.FC = () => {
               className="button secondary" 
               onClick={() => setCurrentView('list')}
             >
-              ← Back to Stories
+              ← Volver a Historias
             </button>
           </div>
 
           <div className="stat-row">
-            <span>Chapter {selectedStory.currentChapterIndex + 1} of {selectedStory.chapterCount}</span>
-            <span>{selectedStory.isActive ? '🟢 Active' : '🔴 Complete'}</span>
+            <span>Capítulo {selectedStory.currentChapterIndex + 1} de {selectedStory.chapterCount}</span>
+            <span>{selectedStory.isActive ? '🟢 Activa' : '🔴 Completa'}</span>
           </div>
         </div>
 
@@ -269,7 +324,7 @@ export const StoryMode: React.FC = () => {
               borderTop: '1px solid rgba(255,255,255,0.2)', 
               paddingTop: '10px' 
             }}>
-              Generated in {currentChapter.metadata.generationTime}ms
+              Generado en {currentChapter.metadata.generationTime}ms
             </div>
           )}
         </div>
@@ -277,14 +332,37 @@ export const StoryMode: React.FC = () => {
         {/* Actions */}
         {selectedStory.canContinue && (
           <div className="card">
-            <h3>What do you do next?</h3>
+            <h3>¿Qué haces a continuación?</h3>
+            
+            {/* Pacing Control */}
+            <div className="form-group" style={{ marginBottom: '20px' }}>
+              <label htmlFor="gamePacing">Ritmo para las siguientes respuestas:</label>
+              <select
+                id="gamePacing"
+                value={pacing}
+                onChange={(e) => setPacing(e.target.value as 'rapido' | 'detallado')}
+                disabled={loading}
+                style={{ 
+                  width: '100%', 
+                  padding: '8px', 
+                  borderRadius: '6px',
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  color: 'white',
+                  fontSize: '0.9rem'
+                }}
+              >
+                <option value="rapido">⚡ Rápido - Respuestas concisas</option>
+                <option value="detallado">📚 Detallado - Más descripción</option>
+              </select>
+            </div>
             
             {error && <div className="error">{error}</div>}
 
             {/* AI Generated Options */}
             {currentChapter?.options && currentChapter.options.length > 0 && (
               <div style={{ marginBottom: '20px' }}>
-                <h4>Choose an action:</h4>
+                <h4>Elige una acción:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
                   {currentChapter.options.map((option, index) => (
                     <button
@@ -308,12 +386,12 @@ export const StoryMode: React.FC = () => {
 
             {/* Custom Action */}
             <div>
-              <h4>Or enter your own action:</h4>
+              <h4>O ingresa tu propia acción:</h4>
               <div className="form-group">
                 <textarea
                   value={customAction}
                   onChange={(e) => setCustomAction(e.target.value)}
-                  placeholder="Describe what your party does..."
+                  placeholder="Describe lo que hace tu grupo..."
                   rows={3}
                   disabled={loading}
                   style={{ 
@@ -332,7 +410,7 @@ export const StoryMode: React.FC = () => {
                 onClick={() => handleContinueStory()}
                 disabled={loading || !customAction.trim()}
               >
-                {loading ? 'Generating...' : '✨ Continue with Custom Action'}
+                {loading ? 'Generando...' : '✨ Continuar con Acción Personalizada'}
               </button>
             </div>
           </div>
@@ -341,7 +419,7 @@ export const StoryMode: React.FC = () => {
         {/* Story History */}
         {selectedStory.chapters.length > 1 && (
           <div className="card">
-            <h3>📜 Story History</h3>
+            <h3>📜 Historial de la Historia</h3>
             <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
               {selectedStory.chapters.slice(0, -1).map((chapter, index) => (
                 <div key={chapter.id} style={{ 
@@ -350,7 +428,7 @@ export const StoryMode: React.FC = () => {
                   borderBottom: '1px solid rgba(255,255,255,0.1)'
                 }}>
                   <div style={{ fontSize: '0.9rem', opacity: 0.8, marginBottom: '5px' }}>
-                    Chapter {index + 1} {chapter.playerAction && `- Action: "${chapter.playerAction}"`}
+                    Capítulo {index + 1} {chapter.playerAction && `- Acción: "${chapter.playerAction}"`}
                   </div>
                   <div style={{ fontSize: '0.95rem', lineHeight: '1.5' }}>
                     {chapter.content.length > 200 
@@ -387,13 +465,13 @@ export const StoryMode: React.FC = () => {
           className={`nav-button ${currentView === 'list' ? 'active' : ''}`}
           onClick={() => setCurrentView('list')}
         >
-          📚 Story List
+          📚 Lista de Historias
         </button>
         <button
           className={`nav-button ${currentView === 'create' ? 'active' : ''}`}
           onClick={() => setCurrentView('create')}
         >
-          ➕ New Story
+          ➕ Nueva Historia
         </button>
       </nav>
 

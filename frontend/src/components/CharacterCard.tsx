@@ -1,5 +1,6 @@
 import React from 'react';
 import { Character } from '../types/Character';
+import { translateClass, getAbilityAbbreviation } from '../utils/translations';
 
 interface CharacterCardProps {
   character: Character;
@@ -29,7 +30,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
     <div className="character-card" onClick={() => onSelect?.(character)}>
       <div className="character-name">{character.name}</div>
       <div className="character-class">
-        {character.characterClass} • Level {character.level}
+        {translateClass(character.characterClass)} • Nivel {character.level}
       </div>
       
       <div className="health-status">
@@ -49,45 +50,45 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
           <span>{character.armorClass}</span>
         </div>
         <div className="stat-row">
-          <span>Experience:</span>
+          <span>Experiencia:</span>
           <span>{character.experience}</span>
         </div>
         <div className="stat-row">
-          <span>Status:</span>
+          <span>Estado:</span>
           <span style={{ color: character.isAlive ? '#00b894' : '#ff6b6b' }}>
-            {character.isAlive ? '💚 Alive' : '💀 Dead'}
+            {character.isAlive ? '💚 Vivo' : '💀 Muerto'}
           </span>
         </div>
       </div>
 
       <div className="ability-scores">
         <div className="ability-score">
-          <div>STR</div>
+          <div>{getAbilityAbbreviation('strength')}</div>
           <div>{character.abilityScores.strength}</div>
           <div>{getModifier(character.abilityScores.strength)}</div>
         </div>
         <div className="ability-score">
-          <div>DEX</div>
+          <div>{getAbilityAbbreviation('dexterity')}</div>
           <div>{character.abilityScores.dexterity}</div>
           <div>{getModifier(character.abilityScores.dexterity)}</div>
         </div>
         <div className="ability-score">
-          <div>CON</div>
+          <div>{getAbilityAbbreviation('constitution')}</div>
           <div>{character.abilityScores.constitution}</div>
           <div>{getModifier(character.abilityScores.constitution)}</div>
         </div>
         <div className="ability-score">
-          <div>INT</div>
+          <div>{getAbilityAbbreviation('intelligence')}</div>
           <div>{character.abilityScores.intelligence}</div>
           <div>{getModifier(character.abilityScores.intelligence)}</div>
         </div>
         <div className="ability-score">
-          <div>WIS</div>
+          <div>{getAbilityAbbreviation('wisdom')}</div>
           <div>{character.abilityScores.wisdom}</div>
           <div>{getModifier(character.abilityScores.wisdom)}</div>
         </div>
         <div className="ability-score">
-          <div>CHA</div>
+          <div>{getAbilityAbbreviation('charisma')}</div>
           <div>{character.abilityScores.charisma}</div>
           <div>{getModifier(character.abilityScores.charisma)}</div>
         </div>
@@ -99,19 +100,19 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
             className="button" 
             onClick={() => onAttack?.(character.id)}
           >
-            ⚔️ Attack
+            ⚔️ Atacar
           </button>
           <button 
             className="button success" 
             onClick={() => onHeal?.(character.id)}
           >
-            ❤️ Heal
+            ❤️ Sanar
           </button>
           <button 
             className="button secondary" 
             onClick={() => onInitiative?.(character.id)}
           >
-            🎲 Initiative
+            🎲 Iniciativa
           </button>
         </div>
       )}

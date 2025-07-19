@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { apiService } from '../services/api';
 import { CreateCharacterData, AbilityScores } from '../types/Character';
+import { translateClass } from '../utils/translations';
 
 interface CharacterCreationProps {
   onCharacterCreated?: () => void;
@@ -45,7 +46,7 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({ onCharacte
         setFormData(prev => ({ ...prev, characterClass: classes[0] }));
       }
     } catch (err) {
-      setError('Failed to load character classes');
+      setError('Error al cargar las clases de personaje');
     }
   };
 
@@ -122,7 +123,7 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({ onCharacte
 
     try {
       await apiService.createCharacter(formData);
-      setSuccess('Character created successfully!');
+      setSuccess('¡Personaje creado exitosamente!');
       onCharacterCreated?.();
       
       setFormData({
@@ -142,7 +143,7 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({ onCharacte
         experience: 0,
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create character');
+      setError(err instanceof Error ? err.message : 'Error al crear el personaje');
     } finally {
       setLoading(false);
     }
@@ -150,26 +151,26 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({ onCharacte
 
   return (
     <div className="card">
-      <h2>Create New Character</h2>
+      <h2>Crear Nuevo Personaje</h2>
       
       {error && <div className="error">{error}</div>}
       {success && <div className="success">{success}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="name">Character Name</label>
+          <label htmlFor="name">Nombre del Personaje</label>
           <input
             type="text"
             id="name"
             value={formData.name}
             onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-            placeholder="Enter character name"
+            placeholder="Ingresa el nombre del personaje"
             required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="characterClass">Character Class</label>
+          <label htmlFor="characterClass">Clase de Personaje</label>
           <select
             id="characterClass"
             value={formData.characterClass}
@@ -178,14 +179,14 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({ onCharacte
           >
             {characterClasses.map(cls => (
               <option key={cls} value={cls}>
-                {cls.charAt(0).toUpperCase() + cls.slice(1)}
+                {translateClass(cls)}
               </option>
             ))}
           </select>
         </div>
 
         <div className="form-group">
-          <label htmlFor="level">Level</label>
+          <label htmlFor="level">Nivel</label>
           <input
             type="number"
             id="level"
@@ -198,9 +199,9 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({ onCharacte
 
         <div style={{ marginBottom: '20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-            <h3>Ability Scores</h3>
+            <h3>Puntuaciones de Habilidad</h3>
             <button type="button" className="button secondary" onClick={rollAbilityScores}>
-              🎲 Roll Stats
+              🎲 Tirar Estadísticas
             </button>
           </div>
 
@@ -208,7 +209,17 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({ onCharacte
             {Object.entries(formData.abilityScores).map(([ability, value]) => (
               <div key={ability} className="form-group">
                 <label htmlFor={ability}>
-                  {ability.charAt(0).toUpperCase() + ability.slice(1).substring(0, 3)}
+                  {(() => {
+                    const abilityTranslations: { [key: string]: string } = {
+                      'strength': 'Fue',
+                      'dexterity': 'Des',
+                      'constitution': 'Con',
+                      'intelligence': 'Int',
+                      'wisdom': 'Sab',
+                      'charisma': 'Car'
+                    };
+                    return abilityTranslations[ability] || ability.charAt(0).toUpperCase() + ability.slice(1).substring(0, 3);
+                  })()}
                 </label>
                 <input
                   type="number"
@@ -228,17 +239,17 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({ onCharacte
 
         <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
           <div className="form-group" style={{ flex: 1 }}>
-            <label>Hit Points</label>
+            <label>Puntos de Vida</label>
             <input type="text" value={formData.maxHitPoints} readOnly />
           </div>
           <div className="form-group" style={{ flex: 1 }}>
-            <label>Armor Class</label>
+            <label>Clase de Armadura</label>
             <input type="text" value={formData.armorClass} readOnly />
           </div>
         </div>
 
         <button type="submit" className="button" disabled={loading || !formData.name.trim()}>
-          {loading ? 'Creating...' : 'Create Character'}
+          {loading ? 'Creando...' : 'Crear Personaje'}
         </button>
       </form>
     </div>

@@ -1,19 +1,34 @@
 import { Character } from '../entities/Character';
 
 export interface AIProvider {
-  generateStoryBeginning(characterNames: string[], characterClasses: string[]): Promise<{
+  generateStoryBeginning(
+    characterNames: string[], 
+    characterClasses: string[], 
+    storyTheme?: string,
+    pacing?: 'rapido' | 'detallado'
+  ): Promise<{
     story: string;
     options: string[];
     metadata?: any;
   }>;
   
-  continueStory(previousStory: string, playerAction: string, characterNames: string[]): Promise<{
+  continueStory(
+    previousStory: string, 
+    playerAction: string, 
+    characterNames: string[],
+    pacing?: 'rapido' | 'detallado'
+  ): Promise<{
     story: string;
     options: string[];
     metadata?: any;
   }>;
   
-  generateCustomResponse(previousStory: string, customAction: string, characterNames: string[]): Promise<{
+  generateCustomResponse(
+    previousStory: string, 
+    customAction: string, 
+    characterNames: string[],
+    pacing?: 'rapido' | 'detallado'
+  ): Promise<{
     story: string;
     options: string[];
     metadata?: any;
@@ -25,7 +40,11 @@ export interface AIProvider {
 export class StoryGenerationService {
   constructor(private readonly aiProvider: AIProvider) {}
 
-  async generateBeginning(characters: Character[]): Promise<{
+  async generateBeginning(
+    characters: Character[], 
+    storyTheme?: string,
+    pacing: 'rapido' | 'detallado' = 'rapido'
+  ): Promise<{
     story: string;
     options: string[];
     metadata?: any;
@@ -37,26 +56,28 @@ export class StoryGenerationService {
     const characterNames = characters.map(char => char.getName());
     const characterClasses = characters.map(char => char.getCharacterClass().getValue());
 
-    return await this.aiProvider.generateStoryBeginning(characterNames, characterClasses);
+    return await this.aiProvider.generateStoryBeginning(characterNames, characterClasses, storyTheme, pacing);
   }
 
   async continueWithChoice(
     previousStory: string,
     selectedOption: string,
-    characters: Character[]
+    characters: Character[],
+    pacing: 'rapido' | 'detallado' = 'rapido'
   ): Promise<{
     story: string;
     options: string[];
     metadata?: any;
   }> {
     const characterNames = characters.map(char => char.getName());
-    return await this.aiProvider.continueStory(previousStory, selectedOption, characterNames);
+    return await this.aiProvider.continueStory(previousStory, selectedOption, characterNames, pacing);
   }
 
   async continueWithCustomAction(
     previousStory: string,
     customAction: string,
-    characters: Character[]
+    characters: Character[],
+    pacing: 'rapido' | 'detallado' = 'rapido'
   ): Promise<{
     story: string;
     options: string[];
@@ -67,7 +88,7 @@ export class StoryGenerationService {
     }
 
     const characterNames = characters.map(char => char.getName());
-    return await this.aiProvider.generateCustomResponse(previousStory, customAction, characterNames);
+    return await this.aiProvider.generateCustomResponse(previousStory, customAction, characterNames, pacing);
   }
 
   async validateConnection(): Promise<boolean> {

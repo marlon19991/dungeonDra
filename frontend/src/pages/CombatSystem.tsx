@@ -23,7 +23,7 @@ export const CombatSystem: React.FC = () => {
       setCharacters(charactersData);
       setError('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load characters');
+      setError(err instanceof Error ? err.message : 'Error al cargar los personajes');
     } finally {
       setLoading(false);
     }
@@ -70,14 +70,14 @@ export const CombatSystem: React.FC = () => {
 
       await refreshCharacter(targetId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Attack failed');
+      setError(err instanceof Error ? err.message : 'Error en el ataque');
     } finally {
       setActionLoading(false);
     }
   };
 
   const handleHeal = async (characterId: string) => {
-    const healAmount = parseInt(prompt('Enter heal amount:') || '0');
+    const healAmount = parseInt(prompt('Ingresa la cantidad de curación:') || '0');
     if (healAmount <= 0) return;
 
     setActionLoading(true);
@@ -85,11 +85,11 @@ export const CombatSystem: React.FC = () => {
       await apiService.healCharacter(characterId, healAmount);
       
       const character = characters.find(c => c.id === characterId);
-      addToCombatLog(`${character?.name || 'Character'} healed for ${healAmount} HP!`);
+      addToCombatLog(`${character?.name || 'Personaje'} curado por ${healAmount} HP!`);
       
       await refreshCharacter(characterId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Healing failed');
+      setError(err instanceof Error ? err.message : 'Error en la curación');
     } finally {
       setActionLoading(false);
     }
@@ -101,10 +101,10 @@ export const CombatSystem: React.FC = () => {
       const result = await apiService.rollInitiative(characterId);
       
       const character = characters.find(c => c.id === characterId);
-      addToCombatLog(`${character?.name || 'Character'} rolls initiative: ${result.initiative}`);
+      addToCombatLog(`${character?.name || 'Personaje'} tira iniciativa: ${result.initiative}`);
       
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Initiative roll failed');
+      setError(err instanceof Error ? err.message : 'Error en la tirada de iniciativa');
     } finally {
       setActionLoading(false);
     }
@@ -113,7 +113,7 @@ export const CombatSystem: React.FC = () => {
   const aliveCharacters = characters.filter(c => c.isAlive);
 
   if (loading) {
-    return <div className="loading">Loading characters...</div>;
+    return <div className="loading">Cargando personajes...</div>;
   }
 
   if (error) {
@@ -121,7 +121,7 @@ export const CombatSystem: React.FC = () => {
       <div className="card">
         <div className="error">{error}</div>
         <button className="button" onClick={loadCharacters}>
-          Try Again
+          Intentar de Nuevo
         </button>
       </div>
     );
@@ -130,8 +130,8 @@ export const CombatSystem: React.FC = () => {
   if (aliveCharacters.length === 0) {
     return (
       <div className="card">
-        <h2>No Living Characters</h2>
-        <p>All characters are dead! Create new characters to start combat.</p>
+        <h2>No Hay Personajes Vivos</h2>
+        <p>¡Todos los personajes están muertos! Crea nuevos personajes para comenzar el combate.</p>
       </div>
     );
   }
@@ -139,11 +139,11 @@ export const CombatSystem: React.FC = () => {
   return (
     <div>
       <div className="card">
-        <h2>⚔️ Combat System</h2>
+        <h2>⚔️ Sistema de Combate</h2>
         <p>
           {selectedAttacker 
-            ? `${selectedAttacker.name} is ready to attack! Select a target.`
-            : 'Select an attacker to begin combat.'
+            ? `${selectedAttacker.name} está listo para atacar! Selecciona un objetivo.`
+            : 'Selecciona un atacante para comenzar el combate.'
           }
         </p>
         
@@ -156,7 +156,7 @@ export const CombatSystem: React.FC = () => {
                 setAttackResult(null);
               }}
             >
-              Clear Selection
+              Limpiar Selección
             </button>
           </div>
         )}
@@ -164,32 +164,32 @@ export const CombatSystem: React.FC = () => {
 
       {attackResult && (
         <div className="card">
-          <h3>Attack Result</h3>
+          <h3>Resultado del Ataque</h3>
           <div className="attack-result">
             <div className="stat-row">
-              <span>Attack Roll:</span>
+              <span>Tirada de Ataque:</span>
               <span>{attackResult.attackRoll}</span>
             </div>
             <div className="stat-row">
-              <span>Target AC:</span>
+              <span>CA del Objetivo:</span>
               <span>{attackResult.targetAc}</span>
             </div>
             <div className="stat-row">
-              <span>Hit:</span>
+              <span>Impacto:</span>
               <span style={{ color: attackResult.success ? '#00b894' : '#ff6b6b' }}>
-                {attackResult.success ? 'YES' : 'NO'}
+                {attackResult.success ? 'SÍ' : 'NO'}
               </span>
             </div>
             {attackResult.success && (
               <>
                 <div className="stat-row">
-                  <span>Damage:</span>
+                  <span>Daño:</span>
                   <span>{attackResult.damage}</span>
                 </div>
                 <div className="stat-row">
-                  <span>Critical Hit:</span>
+                  <span>Golpe Crítico:</span>
                   <span style={{ color: attackResult.criticalHit ? '#ffd700' : '#ffffff' }}>
-                    {attackResult.criticalHit ? 'YES' : 'NO'}
+                    {attackResult.criticalHit ? 'SÍ' : 'NO'}
                   </span>
                 </div>
               </>
@@ -199,7 +199,7 @@ export const CombatSystem: React.FC = () => {
       )}
 
       <div className="card">
-        <h3>Combat Participants</h3>
+        <h3>Participantes del Combate</h3>
         <div className="character-grid">
           {aliveCharacters.map(character => (
             <CharacterCard
@@ -226,15 +226,15 @@ export const CombatSystem: React.FC = () => {
 
         {selectedAttacker && (
           <div style={{ marginTop: '20px', padding: '15px', background: 'rgba(255, 255, 255, 0.1)', borderRadius: '8px' }}>
-            <strong>Selected Attacker: {selectedAttacker.name}</strong>
-            <p>Click on another character to attack them, or use the combat buttons for other actions.</p>
+            <strong>Atacante Seleccionado: {selectedAttacker.name}</strong>
+            <p>Haz clic en otro personaje para atacarlo, o usa los botones de combate para otras acciones.</p>
           </div>
         )}
       </div>
 
       {combatLog.length > 0 && (
         <div className="card">
-          <h3>Combat Log</h3>
+          <h3>Registro de Combate</h3>
           <div style={{ 
             background: 'rgba(0, 0, 0, 0.3)', 
             padding: '15px', 
@@ -255,7 +255,7 @@ export const CombatSystem: React.FC = () => {
             onClick={() => setCombatLog([])}
             style={{ marginTop: '10px' }}
           >
-            Clear Log
+            Limpiar Registro
           </button>
         </div>
       )}
@@ -274,7 +274,7 @@ export const CombatSystem: React.FC = () => {
           zIndex: 1000
         }}>
           <div className="card">
-            <div className="loading">Processing action...</div>
+            <div className="loading">Procesando acción...</div>
           </div>
         </div>
       )}

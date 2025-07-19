@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Character } from '../types/Character';
 import { CharacterCard } from '../components/CharacterCard';
 import { apiService } from '../services/api';
+import { translateClass, translateAbility } from '../utils/translations';
 
 interface CharacterListProps {
   refreshTrigger?: number;
@@ -24,7 +25,7 @@ export const CharacterList: React.FC<CharacterListProps> = ({ refreshTrigger }) 
       setCharacters(charactersData);
       setError('');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load characters');
+      setError(err instanceof Error ? err.message : 'Error al cargar los personajes');
     } finally {
       setLoading(false);
     }
@@ -35,7 +36,7 @@ export const CharacterList: React.FC<CharacterListProps> = ({ refreshTrigger }) 
   };
 
   if (loading) {
-    return <div className="loading">Loading characters...</div>;
+    return <div className="loading">Cargando personajes...</div>;
   }
 
   if (error) {
@@ -43,7 +44,7 @@ export const CharacterList: React.FC<CharacterListProps> = ({ refreshTrigger }) 
       <div className="card">
         <div className="error">{error}</div>
         <button className="button" onClick={loadCharacters}>
-          Try Again
+          Intentar de Nuevo
         </button>
       </div>
     );
@@ -52,8 +53,8 @@ export const CharacterList: React.FC<CharacterListProps> = ({ refreshTrigger }) 
   if (characters.length === 0) {
     return (
       <div className="card">
-        <h2>No Characters Found</h2>
-        <p>Create your first character to get started!</p>
+        <h2>No se Encontraron Personajes</h2>
+        <p>¡Crea tu primer personaje para comenzar!</p>
       </div>
     );
   }
@@ -61,8 +62,8 @@ export const CharacterList: React.FC<CharacterListProps> = ({ refreshTrigger }) 
   return (
     <div>
       <div className="card">
-        <h2>Character Roster ({characters.length})</h2>
-        <p>Click on a character to view detailed information</p>
+        <h2>Lista de Personajes ({characters.length})</h2>
+        <p>Haz clic en un personaje para ver información detallada</p>
       </div>
 
       <div className="character-grid">
@@ -77,58 +78,58 @@ export const CharacterList: React.FC<CharacterListProps> = ({ refreshTrigger }) 
 
       {selectedCharacter && (
         <div className="card">
-          <h3>Character Details: {selectedCharacter.name}</h3>
+          <h3>Detalles del Personaje: {selectedCharacter.name}</h3>
           
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginTop: '20px' }}>
             <div>
-              <h4>Basic Information</h4>
+              <h4>Información Básica</h4>
               <div className="stat-row">
                 <span>ID:</span>
                 <span style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>{selectedCharacter.id}</span>
               </div>
               <div className="stat-row">
-                <span>Name:</span>
+                <span>Nombre:</span>
                 <span>{selectedCharacter.name}</span>
               </div>
               <div className="stat-row">
-                <span>Class:</span>
-                <span style={{ textTransform: 'capitalize' }}>{selectedCharacter.characterClass}</span>
+                <span>Clase:</span>
+                <span>{translateClass(selectedCharacter.characterClass)}</span>
               </div>
               <div className="stat-row">
-                <span>Level:</span>
+                <span>Nivel:</span>
                 <span>{selectedCharacter.level}</span>
               </div>
               <div className="stat-row">
-                <span>Experience:</span>
+                <span>Experiencia:</span>
                 <span>{selectedCharacter.experience}</span>
               </div>
             </div>
 
             <div>
-              <h4>Combat Stats</h4>
+              <h4>Estadísticas de Combate</h4>
               <div className="stat-row">
-                <span>Hit Points:</span>
+                <span>Puntos de Vida:</span>
                 <span>{selectedCharacter.hitPoints.current}/{selectedCharacter.hitPoints.max}</span>
               </div>
               <div className="stat-row">
-                <span>Armor Class:</span>
+                <span>Clase de Armadura:</span>
                 <span>{selectedCharacter.armorClass}</span>
               </div>
               <div className="stat-row">
-                <span>Status:</span>
+                <span>Estado:</span>
                 <span style={{ color: selectedCharacter.isAlive ? '#00b894' : '#ff6b6b' }}>
-                  {selectedCharacter.isAlive ? '💚 Alive' : '💀 Dead'}
+                  {selectedCharacter.isAlive ? '💚 Vivo' : '💀 Muerto'}
                 </span>
               </div>
             </div>
 
             <div>
-              <h4>Ability Scores</h4>
+              <h4>Puntuaciones de Habilidad</h4>
               {Object.entries(selectedCharacter.abilityScores).map(([ability, score]) => {
                 const modifier = Math.floor((score - 10) / 2);
                 return (
                   <div key={ability} className="stat-row">
-                    <span style={{ textTransform: 'capitalize' }}>{ability}:</span>
+                    <span>{translateAbility(ability)}:</span>
                     <span>
                       {score} ({modifier >= 0 ? '+' : ''}{modifier})
                     </span>
@@ -143,16 +144,16 @@ export const CharacterList: React.FC<CharacterListProps> = ({ refreshTrigger }) 
               className="button secondary" 
               onClick={() => setSelectedCharacter(null)}
             >
-              Close Details
+              Cerrar Detalles
             </button>
             <button 
               className="button" 
               onClick={() => {
                 navigator.clipboard.writeText(selectedCharacter.id);
-                alert('Character ID copied to clipboard!');
+                alert('¡ID del personaje copiado al portapapeles!');
               }}
             >
-              Copy ID
+              Copiar ID
             </button>
           </div>
         </div>

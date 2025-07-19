@@ -1,6 +1,8 @@
 export interface CreateStoryDto {
   characterIds: string[];
   title?: string;
+  theme?: string;
+  pacing?: 'rapido' | 'detallado';
 }
 
 export interface StoryChapterDto {
@@ -32,6 +34,7 @@ export interface ContinueStoryDto {
   storyId: string;
   selectedOption?: string;
   customAction?: string;
+  pacing?: 'rapido' | 'detallado';
 }
 
 export interface StoryGenerationResponseDto {

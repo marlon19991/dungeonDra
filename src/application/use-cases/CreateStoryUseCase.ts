@@ -32,7 +32,7 @@ export class CreateStoryUseCase {
     }
 
     try {
-      const generationResult = await this.storyGenerationService.generateBeginning(aliveCharacters);
+      const generationResult = await this.storyGenerationService.generateBeginning(aliveCharacters, dto.theme, dto.pacing);
       
       const title = dto.title || this.storyGenerationService.generateStoryTitle(aliveCharacters);
       
