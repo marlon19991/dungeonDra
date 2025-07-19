@@ -32,7 +32,7 @@ export class GeminiAIService {
     
     this.genAI = new GoogleGenerativeAI(config.apiKey);
     this.model = this.genAI.getGenerativeModel({ 
-      model: config.model || 'gemini-pro' 
+      model: config.model || 'gemini-1.5-flash' 
     });
   }
 
@@ -162,7 +162,22 @@ OPTIONS:
         }
       };
     } catch (error) {
-      throw new Error(`Story generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      console.error('Gemini API Error:', error);
+      
+      if (error instanceof Error) {
+        if (error.message.includes('API_KEY_INVALID')) {
+          throw new Error('Invalid Gemini API key. Please check your API key in the .env file.');
+        }
+        if (error.message.includes('models/gemini-pro')) {
+          throw new Error('Model gemini-pro is deprecated. Using gemini-1.5-flash instead.');
+        }
+        if (error.message.includes('PERMISSION_DENIED')) {
+          throw new Error('Permission denied. Make sure your API key has access to the Gemini API.');
+        }
+        throw new Error(`Story generation failed: ${error.message}`);
+      }
+      
+      throw new Error('Story generation failed: Unknown error');
     }
   }
 
