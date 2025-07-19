@@ -33,14 +33,15 @@ export class CombatUseCase {
     }
 
     const attackBonus = attacker.getAbilityScores().getModifier('strength');
-    const attackRoll = this.diceService.rollAttack(attackBonus);
+    const attackCheck = this.diceService.rollAttack(attackBonus);
+    const attackRoll = attackCheck.roll.total;
     const targetAc = target.getArmorClass();
-    const criticalHit = (attackRoll - attackBonus) === 20;
+    const criticalHit = attackCheck.roll.roll === 20;
     const success = attackRoll >= targetAc || criticalHit;
 
     let damage = 0;
     if (success) {
-      const baseDamage = this.diceService.rollAttack(attackBonus);
+      const baseDamage = this.diceService.rollDamage(1, 8, attackBonus).total;
       damage = criticalHit ? baseDamage * 2 : baseDamage;
       target.takeDamage(damage);
       await this.characterRepository.update(target);
