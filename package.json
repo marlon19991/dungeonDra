@@ -1,14 +1,25 @@
 {
   "name": "dungeon-dra",
   "version": "1.0.0",
-  "type": "module",
   "scripts": {
-    "build": "tsc && vite build",
-    "dev": "ts-node src/main.ts",
-    "start": "node dist/main.js",
+    "start": "npm run build && node dist/web.js",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\" --names \"🚀SERVER,⚡CLIENT\" --prefix-colors \"cyan,magenta\"",
+    "dev:server": "cross-env NODE_ENV=development nodemon --exec ts-node src/web.ts",
+    "dev:client": "cd frontend && npm run dev",
+    "build": "npm run build:server && npm run build:client",
+    "build:server": "tsc",
+    "build:client": "cd frontend && npm run build && cd .. && cp -r frontend/dist/* public/",
+    "setup": "npm install && cd frontend && npm install && cd .. && npm run build",
+    "clean": "rm -rf dist public/* frontend/dist node_modules/ts-node/.ts-node",
+    "reset": "npm run clean && npm install",
     "test": "ts-node src/application/use-cases/CombatUseCase.test.ts",
-    "lint": "eslint \"src/**/*.{ts,tsx}\" \"frontend/src/**/*.{ts,tsx}\"",
-    "typecheck": "tsc --noEmit"
+    "test:watch": "nodemon --exec \"npm test\"",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" \"frontend/src/**/*.{ts,tsx}\" --fix",
+    "typecheck": "tsc --noEmit && cd frontend && npm run typecheck",
+    "health": "curl -f http://localhost:3000/api/health || echo '❌ Server not running'",
+    "logs": "tail -f /tmp/dnd-game.log 2>/dev/null || echo 'No logs found'",
+    "kill": "lsof -ti:3000 | xargs kill -9 2>/dev/null || pkill -f 'ts-node src/web.ts' || pkill -f 'node dist/web.js' || pkill -f vite || pkill -f nodemon || pkill -f concurrently || echo 'No processes killed'",
+    "help": "node scripts/help.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.3.0",
@@ -22,12 +33,20 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^4.17.17",
+    "@types/morgan": "^1.9.10",
     "@types/node": "^20.4.2",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
+    "@types/uuid": "^10.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.37.0",
+    "@typescript-eslint/parser": "^8.37.0",
     "@vitejs/plugin-react": "^4.0.0",
+    "concurrently": "^9.2.0",
+    "cross-env": "^7.0.3",
     "eslint": "^8.50.0",
+    "nodemon": "^3.1.10",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
     "vite": "^4.4.9"

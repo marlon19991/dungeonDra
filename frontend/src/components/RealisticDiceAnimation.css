@@ -1,0 +1,434 @@
+.realistic-dice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  perspective: 1000px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  border-radius: 16px;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.4),
+    inset 0 1px 3px rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+}
+
+.realistic-dice-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.dice-table {
+  position: relative;
+  width: 400px;
+  height: 200px;
+  background: linear-gradient(45deg, #064e3b 0%, #065f46 50%, #047857 100%);
+  border-radius: 12px;
+  box-shadow: 
+    inset 0 4px 8px rgba(0, 0, 0, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+.dice-table::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(255, 255, 255, 0.02) 10px,
+      rgba(255, 255, 255, 0.02) 20px
+    );
+  border-radius: 12px;
+}
+
+.dice-area {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+
+.dice-wrapper {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  transform-style: preserve-3d;
+  transition: none;
+}
+
+.dice-wrapper.throwing {
+  animation: diceThrow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.dice-wrapper.rolling {
+  animation: diceRoll 0.1s linear infinite;
+}
+
+.dice-wrapper.settling {
+  animation: diceSettle 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes diceThrow {
+  0% {
+    transform: translateY(-100px) rotateX(0deg) rotateY(0deg) scale(0.8);
+  }
+  50% {
+    transform: translateY(-50px) rotateX(180deg) rotateY(180deg) scale(1.1);
+  }
+  100% {
+    transform: translateY(0px) rotateX(360deg) rotateY(360deg) scale(1);
+  }
+}
+
+@keyframes diceRoll {
+  0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+  100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+}
+
+@keyframes diceSettle {
+  0% { transform: scale(1.1) rotateX(0deg); }
+  50% { transform: scale(0.95) rotateX(5deg); }
+  100% { transform: scale(1) rotateX(0deg); }
+}
+
+.dice-3d {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* Dado de 6 caras (Cubo) */
+.dice-cube {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  transform-style: preserve-3d;
+}
+
+.dice-cube .face {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: #1e293b;
+  box-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.dice-cube .face.front  { transform: translateZ(30px); }
+.dice-cube .face.back   { transform: rotateY(180deg) translateZ(30px); }
+.dice-cube .face.right  { transform: rotateY(90deg) translateZ(30px); }
+.dice-cube .face.left   { transform: rotateY(-90deg) translateZ(30px); }
+.dice-cube .face.top    { transform: rotateX(90deg) translateZ(30px); }
+.dice-cube .face.bottom { transform: rotateX(-90deg) translateZ(30px); }
+
+/* Patrón de puntos para d6 */
+.dot-pattern {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px;
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.dot.active {
+  background: #1e293b;
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+/* Dados de otras formas */
+.dice-tetrahedron {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  transform-style: preserve-3d;
+}
+
+.dice-tetrahedron .face {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: 25px solid transparent;
+  border-right: 25px solid transparent;
+  border-bottom: 43px solid #e2e8f0;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1e293b;
+  font-weight: bold;
+  line-height: 30px;
+}
+
+.dice-octahedron,
+.dice-decahedron,
+.dice-dodecahedron,
+.dice-icosahedron,
+.dice-percentile {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #1e293b;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.8);
+  transform-style: preserve-3d;
+}
+
+.dice-octahedron {
+  clip-path: polygon(50% 0%, 0% 50%, 50% 100%, 100% 50%);
+}
+
+.dice-decahedron {
+  clip-path: polygon(50% 0%, 80% 10%, 100% 35%, 82% 70%, 68% 100%, 32% 100%, 18% 70%, 0% 35%, 20% 10%);
+}
+
+.dice-icosahedron {
+  background: linear-gradient(145deg, #fef3c7, #fbbf24);
+  border-color: #f59e0b;
+  color: #92400e;
+  font-size: 16px;
+}
+
+.dice-percentile {
+  background: linear-gradient(145deg, #ede9fe, #a855f7);
+  border-color: #9333ea;
+  color: #581c87;
+}
+
+/* Resultado superpuesto */
+.dice-result-overlay {
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.result-number {
+  display: block;
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.5),
+    0 0 10px currentColor;
+  margin-bottom: 4px;
+}
+
+.advantage-label {
+  display: block;
+  font-size: 10px;
+  color: #4ade80;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.disadvantage-label {
+  display: block;
+  font-size: 10px;
+  color: #ef4444;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Resultado final */
+.final-result {
+  margin-top: 20px;
+  text-align: center;
+  color: #f1f5f9;
+}
+
+.total-calculation {
+  font-size: 18px;
+  margin-bottom: 8px;
+  padding: 8px 16px;
+  background: rgba(15, 23, 42, 0.8);
+  border-radius: 8px;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.critical-success {
+  font-size: 16px;
+  color: #fbbf24;
+  font-weight: bold;
+  animation: criticalGlow 1s ease-in-out infinite alternate;
+}
+
+.critical-failure {
+  font-size: 16px;
+  color: #ef4444;
+  font-weight: bold;
+  animation: criticalShake 0.5s ease-in-out;
+}
+
+@keyframes criticalGlow {
+  0% { 
+    text-shadow: 0 0 10px #fbbf24;
+    transform: scale(1);
+  }
+  100% { 
+    text-shadow: 0 0 20px #fbbf24, 0 0 30px #fbbf24;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes criticalShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* Información de dados */
+.dice-info {
+  margin-top: 16px;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.dice-type-label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #e2e8f0;
+}
+
+.rolling-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.rolling-dots {
+  font-size: 14px;
+  animation: rollPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes rollPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Efectos de partículas cuando se complete */
+.dice-wrapper.complete::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: completeGlow 0.8s ease-out;
+  pointer-events: none;
+}
+
+@keyframes completeGlow {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .realistic-dice-container {
+    padding: 15px;
+    min-height: 250px;
+  }
+  
+  .dice-table {
+    width: 300px;
+    height: 150px;
+  }
+  
+  .dice-wrapper {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .dice-cube {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .dice-cube .face {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .dice-octahedron,
+  .dice-decahedron,
+  .dice-dodecahedron,
+  .dice-icosahedron,
+  .dice-percentile {
+    width: 50px;
+    height: 50px;
+    font-size: 16px;
+  }
+  
+  .result-number {
+    font-size: 20px;
+  }
+  
+  .total-calculation {
+    font-size: 16px;
+  }
+}

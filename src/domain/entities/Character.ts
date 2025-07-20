@@ -2,6 +2,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { CharacterClassVO } from '../value-objects/CharacterClass';
 import { AbilityScores } from '../value-objects/AbilityScores';
 import { HitPoints } from '../value-objects/HitPoints';
+import { Skills, SkillName } from '../value-objects/Skills';
+import { getDefaultSkillsForClass } from '../value-objects/ClassSkills';
 
 export interface CharacterData {
   id?: string;
@@ -12,6 +14,7 @@ export interface CharacterData {
   hitPoints: HitPoints;
   armorClass: number;
   experience: number;
+  skills?: Skills;
 }
 
 export class Character {
@@ -23,6 +26,7 @@ export class Character {
   private hitPoints: HitPoints;
   private armorClass: number;
   private experience: number;
+  private skills: Skills;
 
   constructor(data: CharacterData) {
     this.id = data.id || uuidv4();
@@ -33,6 +37,7 @@ export class Character {
     this.hitPoints = data.hitPoints;
     this.armorClass = data.armorClass;
     this.experience = data.experience;
+    this.skills = data.skills || new Skills(getDefaultSkillsForClass(data.characterClass.getValue()));
     this.validate();
   }
 
@@ -59,6 +64,7 @@ export class Character {
   getHitPoints(): HitPoints { return this.hitPoints; }
   getArmorClass(): number { return this.armorClass; }
   getExperience(): number { return this.experience; }
+  getSkills(): Skills { return this.skills; }
 
   takeDamage(damage: number): void {
     this.hitPoints = this.hitPoints.takeDamage(damage);
@@ -88,5 +94,26 @@ export class Character {
 
   equals(other: Character): boolean {
     return this.id === other.id;
+  }
+
+  getProficiencyBonus(): number {
+    return Math.ceil(this.level / 4) + 1;
+  }
+
+  getSkillModifier(skill: SkillName): number {
+    const ability = this.skills.getSkillAbility(skill);
+    const abilityModifier = this.abilityScores.getModifier(ability);
+    const proficiencyBonus = this.skills.isProficient(skill) ? this.getProficiencyBonus() : 0;
+    return abilityModifier + proficiencyBonus;
+  }
+
+  rollSkill(skill: SkillName): { roll: number; modifier: number; total: number } {
+    const roll = Math.floor(Math.random() * 20) + 1;
+    const modifier = this.getSkillModifier(skill);
+    return {
+      roll,
+      modifier,
+      total: roll + modifier
+    };
   }
 }

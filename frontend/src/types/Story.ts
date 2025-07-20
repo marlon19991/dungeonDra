@@ -1,8 +1,27 @@
+export interface DiceRequest {
+  type: 'ability' | 'attack' | 'damage' | 'saving_throw' | 'skill';
+  ability?: string;
+  skill?: string;
+  difficulty?: number;
+  description: string;
+  diceNotation?: string;
+}
+
+export interface DiceResult {
+  roll: number;
+  modifier?: number;
+  total: number;
+  success?: boolean;
+  description: string;
+}
+
 export interface StoryChapter {
   id: string;
   content: string;
   playerAction?: string;
   options: string[];
+  diceRequests?: DiceRequest[];
+  diceResults?: DiceResult[];
   timestamp: string;
   metadata?: {
     tokensUsed?: number;

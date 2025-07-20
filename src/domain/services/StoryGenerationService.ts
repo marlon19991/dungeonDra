@@ -1,14 +1,42 @@
 import { Character } from '../entities/Character';
 
+export interface DiceRequest {
+  type: 'ability' | 'attack' | 'damage' | 'saving_throw' | 'skill';
+  ability?: string;
+  skill?: string;
+  difficulty?: number;
+  description: string;
+  diceNotation?: string;
+}
+
+export interface CharacterStats {
+  name: string;
+  class: string;
+  level: number;
+  hitPoints: { current: number; maximum: number };
+  armorClass: number;
+  abilityScores: {
+    strength: number;
+    dexterity: number;
+    constitution: number;
+    intelligence: number;
+    wisdom: number;
+    charisma: number;
+  };
+  skills: string[];
+}
+
 export interface AIProvider {
   generateStoryBeginning(
     characterNames: string[], 
     characterClasses: string[], 
     storyTheme?: string,
-    pacing?: 'rapido' | 'detallado'
+    pacing?: 'rapido' | 'detallado',
+    characters?: CharacterStats[]
   ): Promise<{
     story: string;
     options: string[];
+    diceRequests?: DiceRequest[];
     metadata?: any;
   }>;
   
@@ -20,6 +48,7 @@ export interface AIProvider {
   ): Promise<{
     story: string;
     options: string[];
+    diceRequests?: DiceRequest[];
     metadata?: any;
   }>;
   
@@ -31,6 +60,7 @@ export interface AIProvider {
   ): Promise<{
     story: string;
     options: string[];
+    diceRequests?: DiceRequest[];
     metadata?: any;
   }>;
   
@@ -47,6 +77,7 @@ export class StoryGenerationService {
   ): Promise<{
     story: string;
     options: string[];
+    diceRequests?: DiceRequest[];
     metadata?: any;
   }> {
     if (characters.length === 0) {
@@ -55,8 +86,31 @@ export class StoryGenerationService {
 
     const characterNames = characters.map(char => char.getName());
     const characterClasses = characters.map(char => char.getCharacterClass().getValue());
+    
+    // Convertir personajes a estadísticas para la IA
+    const characterStats: CharacterStats[] = characters.map(char => ({
+      name: char.getName(),
+      class: char.getCharacterClass().getValue(),
+      level: char.getLevel(),
+      hitPoints: {
+        current: char.getHitPoints().getCurrentHp(),
+        maximum: char.getHitPoints().getMaxHp()
+      },
+      armorClass: char.getArmorClass(),
+      abilityScores: {
+        strength: char.getAbilityScores().getStrength(),
+        dexterity: char.getAbilityScores().getDexterity(),
+        constitution: char.getAbilityScores().getConstitution(),
+        intelligence: char.getAbilityScores().getIntelligence(),
+        wisdom: char.getAbilityScores().getWisdom(),
+        charisma: char.getAbilityScores().getCharisma()
+      },
+      skills: char.getSkills().getAllProficiencies().map(skill => 
+        char.getSkills().getSpanishName(skill)
+      )
+    }));
 
-    return await this.aiProvider.generateStoryBeginning(characterNames, characterClasses, storyTheme, pacing);
+    return await this.aiProvider.generateStoryBeginning(characterNames, characterClasses, storyTheme, pacing, characterStats);
   }
 
   async continueWithChoice(
@@ -67,6 +121,7 @@ export class StoryGenerationService {
   ): Promise<{
     story: string;
     options: string[];
+    diceRequests?: DiceRequest[];
     metadata?: any;
   }> {
     const characterNames = characters.map(char => char.getName());
@@ -81,6 +136,7 @@ export class StoryGenerationService {
   ): Promise<{
     story: string;
     options: string[];
+    diceRequests?: DiceRequest[];
     metadata?: any;
   }> {
     if (!customAction.trim()) {

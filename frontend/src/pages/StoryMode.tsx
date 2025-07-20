@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Character } from '../types/Character';
-import { Story, CreateStoryData } from '../types/Story';
+import { Story, CreateStoryData, DiceResult } from '../types/Story';
 import { apiService } from '../services/api';
 import { storyApiService } from '../services/storyApi';
+import { DiceRoller } from '../components/DiceRoller';
+import InteractiveDiceRoller, { DiceRequest, DiceRollResult } from '../components/InteractiveDiceRoller';
+import StoryOptionWithDice, { StoryOption } from '../components/StoryOptionWithDice';
 
 export const StoryMode: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
@@ -16,6 +19,10 @@ export const StoryMode: React.FC = () => {
   const [customAction, setCustomAction] = useState('');
   const [storyTheme, setStoryTheme] = useState('');
   const [pacing, setPacing] = useState<'rapido' | 'detallado'>('rapido');
+  const [pendingDiceResults, setPendingDiceResults] = useState<DiceResult[] | null>(null);
+  const [pendingDiceRequests, setPendingDiceRequests] = useState<DiceRequest[]>([]);
+  const [showDiceRoller, setShowDiceRoller] = useState(false);
+  const [currentCharacterName, setCurrentCharacterName] = useState('');
 
   useEffect(() => {
     loadCharacters();
@@ -64,11 +71,41 @@ export const StoryMode: React.FC = () => {
       setSelectedStory(newStory);
       setCurrentView('play');
       setSuccess('¡Historia creada exitosamente!');
+      
+      // Verificar si hay dados pendientes en la nueva historia
+      const currentChapter = newStory.chapters[newStory.currentChapterIndex];
+      if (currentChapter?.diceRequests && currentChapter.diceRequests.length > 0) {
+        const selectedCharacterNames = characters
+          .filter(char => selectedCharacters.includes(char.id))
+          .map(char => char.name);
+        
+        setPendingDiceRequests(currentChapter.diceRequests);
+        setCurrentCharacterName(selectedCharacterNames[0] || 'Aventurero');
+        setShowDiceRoller(true);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al crear la historia');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDiceRollsComplete = (results: DiceRollResult[]) => {
+    // Convertir los resultados al formato esperado por el backend
+    const diceResults: DiceResult[] = results.map(result => ({
+      roll: result.roll,
+      modifier: result.modifier,
+      total: result.total,
+      success: result.success,
+      description: result.request.description
+    }));
+    
+    setPendingDiceResults(diceResults);
+    setShowDiceRoller(false);
+    setPendingDiceRequests([]);
+    
+    // Aquí podrías enviar los resultados al backend si es necesario
+    console.log('Resultados de dados:', diceResults);
   };
 
   const handleContinueStory = async (selectedOption?: string) => {
@@ -99,6 +136,18 @@ export const StoryMode: React.FC = () => {
       setStories(prev => 
         prev.map(story => story.id === updatedStory.id ? updatedStory : story)
       );
+
+      // Verificar si hay dados pendientes en la historia actualizada
+      const currentChapter = updatedStory.chapters[updatedStory.currentChapterIndex];
+      if (currentChapter?.diceRequests && currentChapter.diceRequests.length > 0) {
+        const selectedCharacterNames = characters
+          .filter(char => selectedStory.characterIds.includes(char.id))
+          .map(char => char.name);
+        
+        setPendingDiceRequests(currentChapter.diceRequests);
+        setCurrentCharacterName(selectedCharacterNames[0] || 'Aventurero');
+        setShowDiceRoller(true);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al continuar la historia');
     } finally {
@@ -106,6 +155,11 @@ export const StoryMode: React.FC = () => {
     }
   };
 
+  const handleDiceRollComplete = (results: DiceResult[]) => {
+    setPendingDiceResults(results);
+    // Aquí podrías automáticamente continuar la historia con los resultados
+    // o esperar a que el usuario elija una acción
+  };
 
   const renderStoryCreation = () => (
     <div className="card">
@@ -359,27 +413,97 @@ export const StoryMode: React.FC = () => {
             
             {error && <div className="error">{error}</div>}
 
-            {/* AI Generated Options */}
+            {/* Interactive Dice Roller */}
+            {showDiceRoller && pendingDiceRequests.length > 0 && (
+              <InteractiveDiceRoller
+                diceRequests={pendingDiceRequests}
+                characterName={currentCharacterName}
+                onAllRollsComplete={handleDiceRollsComplete}
+                autoRoll={true}
+              />
+            )}
+
+            {/* Old Dice Roller (fallback) */}
+            {!showDiceRoller && currentChapter?.diceRequests && currentChapter.diceRequests.length > 0 && !pendingDiceResults && (
+              <DiceRoller 
+                diceRequests={currentChapter.diceRequests}
+                onRollComplete={handleDiceRollComplete}
+              />
+            )}
+
+            {/* Show Dice Results */}
+            {pendingDiceResults && (
+              <div className="card" style={{ marginBottom: '20px', background: 'rgba(0, 184, 148, 0.2)' }}>
+                <h3>🎲 Resultados de las Tiradas</h3>
+                {pendingDiceResults.map((result, index) => (
+                  <div key={index} style={{ 
+                    padding: '10px', 
+                    marginBottom: '10px',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '6px'
+                  }}>
+                    <strong>{result.description}</strong>: {result.total}
+                    {result.success !== undefined && (
+                      <span style={{ 
+                        marginLeft: '10px',
+                        color: result.success ? '#00b894' : '#ff6b6b',
+                        fontWeight: 'bold'
+                      }}>
+                        {result.success ? '✅ Éxito' : '❌ Fallo'}
+                      </span>
+                    )}
+                  </div>
+                ))}
+                <button 
+                  className="button secondary" 
+                  onClick={() => setPendingDiceResults(null)}
+                  style={{ marginTop: '10px' }}
+                >
+                  Cerrar Resultados
+                </button>
+              </div>
+            )}
+
+            {/* AI Generated Options with Dice */}
             {currentChapter?.options && currentChapter.options.length > 0 && (
               <div style={{ marginBottom: '20px' }}>
                 <h4>Elige una acción:</h4>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '10px' }}>
-                  {currentChapter.options.map((option, index) => (
-                    <button
-                      key={index}
-                      className="button secondary"
-                      onClick={() => handleContinueStory(option)}
-                      disabled={loading}
-                      style={{ 
-                        textAlign: 'left', 
-                        padding: '15px', 
-                        whiteSpace: 'normal',
-                        height: 'auto'
-                      }}
-                    >
-                      {index + 1}. {option}
-                    </button>
-                  ))}
+                  {currentChapter.options.map((option, index) => {
+                    // Crear StoryOption con tirada asociada
+                    const storyOption: StoryOption = {
+                      text: option,
+                      diceRequirement: currentChapter.diceRequests?.[index] ? {
+                        type: currentChapter.diceRequests[index].type,
+                        ability: currentChapter.diceRequests[index].ability,
+                        skill: currentChapter.diceRequests[index].skill,
+                        difficulty: currentChapter.diceRequests[index].difficulty || 15,
+                        description: currentChapter.diceRequests[index].description,
+                        diceNotation: currentChapter.diceRequests[index].diceNotation || '1d20'
+                      } : undefined
+                    };
+
+                    const characterName = characters
+                      .filter(char => selectedStory?.characterIds.includes(char.id))
+                      .map(char => char.name)[0] || 'Aventurero';
+
+                    return (
+                      <StoryOptionWithDice
+                        key={index}
+                        option={storyOption}
+                        index={index}
+                        characterName={characterName}
+                        onOptionSelect={(optionIndex, diceResult) => {
+                          const selectedOption = currentChapter.options[optionIndex];
+                          if (diceResult) {
+                            console.log('Opción con resultado de dados:', selectedOption, diceResult);
+                          }
+                          handleContinueStory(selectedOption);
+                        }}
+                        disabled={loading}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             )}

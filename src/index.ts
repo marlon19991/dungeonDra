@@ -1,4 +1,4 @@
-export { DnDGameApplication } from './main';
+// Removed DnDGameApplication export - CLI version eliminated
 export { Character } from './domain/entities/Character';
 export { CharacterClass, CharacterClassVO } from './domain/value-objects/CharacterClass';
 export { AbilityScores } from './domain/value-objects/AbilityScores';

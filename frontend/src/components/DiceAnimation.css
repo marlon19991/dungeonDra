@@ -1,0 +1,248 @@
+.dice-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  margin: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dice-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  animation: shine 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0%, 100% { transform: translateX(-100%) translateY(-100%); }
+  50% { transform: translateX(100%) translateY(100%); }
+}
+
+.dice {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(145deg, #475569, #334155);
+  border-radius: 12px;
+  box-shadow: 
+    0 4px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 3px rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.dice:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 3px rgba(255, 255, 255, 0.3);
+}
+
+.dice.rolling {
+  animation: roll 0.1s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes roll {
+  0% { transform: rotate(0deg) scale(1); }
+  25% { transform: rotate(90deg) scale(1.1); }
+  50% { transform: rotate(180deg) scale(1); }
+  75% { transform: rotate(270deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.dice-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.dice-icon {
+  font-size: 24px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.dice-number {
+  font-family: 'Courier New', monospace;
+  font-size: 18px;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  color: #f1f5f9;
+}
+
+.dice-info {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.dice-type {
+  font-size: 14px;
+  color: #94a3b8;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.roll-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.total-value {
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.modifier-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 6px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.modifier-sign {
+  color: #10b981;
+  font-weight: bold;
+}
+
+.total-result {
+  color: #fbbf24;
+  font-weight: bold;
+}
+
+.nat-result {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.nat-20 {
+  color: #fbbf24;
+  font-weight: bold;
+  animation: glow 1s ease-in-out infinite alternate;
+}
+
+.nat-1 {
+  color: #ef4444;
+  font-weight: bold;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes glow {
+  0% { text-shadow: 0 0 5px #fbbf24; }
+  100% { text-shadow: 0 0 20px #fbbf24, 0 0 30px #fbbf24; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+
+/* Advantage/Disadvantage */
+.advantage-dice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.dice-pair {
+  display: flex;
+  gap: 16px;
+}
+
+.dice.chosen {
+  border: 2px solid #fbbf24;
+  box-shadow: 
+    0 0 15px rgba(251, 191, 36, 0.5),
+    0 4px 8px rgba(0, 0, 0, 0.3);
+  animation: chosen-glow 1s ease-in-out;
+}
+
+@keyframes chosen-glow {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.advantage-result {
+  text-align: center;
+  color: #f1f5f9;
+}
+
+.advantage-text {
+  color: #4ade80;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.disadvantage-text {
+  color: #ef4444;
+  font-weight: bold;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.final-result {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.modifier {
+  color: #10b981;
+  margin-left: 8px;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .dice-container {
+    padding: 15px;
+  }
+  
+  .dice {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .dice-icon {
+    font-size: 20px;
+  }
+  
+  .dice-number {
+    font-size: 14px;
+  }
+  
+  .total-value {
+    font-size: 20px;
+  }
+  
+  .dice-pair {
+    gap: 12px;
+  }
+}
