@@ -81,8 +81,8 @@ export class Skills {
 
   getAllProficiencies(): SkillName[] {
     return Object.entries(this.skills)
-      .filter(([_, proficient]) => proficient)
-      .map(([skill, _]) => skill as SkillName);
+      .filter(([, proficient]) => proficient)
+      .map(([skill]) => skill as SkillName);
   }
 
   getSkillAbility(skill: SkillName): 'strength' | 'dexterity' | 'constitution' | 'intelligence' | 'wisdom' | 'charisma' {

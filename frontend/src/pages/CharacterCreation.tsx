@@ -45,7 +45,7 @@ export const CharacterCreation: React.FC<CharacterCreationProps> = ({ onCharacte
       if (classes.length > 0) {
         setFormData(prev => ({ ...prev, characterClass: classes[0] }));
       }
-    } catch (err) {
+    } catch {
       setError('Error al cargar las clases de personaje');
     }
   };

@@ -1,4 +1,3 @@
-import { Character } from '../../domain/entities/Character';
 import { DiceService } from '../../domain/services/DiceService';
 import { ICharacterRepository } from '../../domain/repositories/ICharacterRepository';
 

@@ -27,7 +27,7 @@ export class FileStorageService {
       for (const character of charactersArray) {
         characters.set(character.id, character);
       }
-    } catch (error) {
+    } catch {
       console.log('No existing character data found, starting with empty repository');
     }
 

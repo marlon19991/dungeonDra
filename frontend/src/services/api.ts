@@ -2,6 +2,12 @@ import { Character, CreateCharacterData, AttackResult } from '../types/Character
 
 const API_BASE_URL = 'http://localhost:3000/api';
 
+type RequestInit = {
+  method?: string;
+  headers?: Record<string, string>;
+  body?: string;
+};
+
 class ApiService {
   private async fetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {

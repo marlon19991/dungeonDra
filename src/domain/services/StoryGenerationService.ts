@@ -150,7 +150,7 @@ export class StoryGenerationService {
   async validateConnection(): Promise<boolean> {
     try {
       return await this.aiProvider.testConnection();
-    } catch (error) {
+    } catch {
       return false;
     }
   }

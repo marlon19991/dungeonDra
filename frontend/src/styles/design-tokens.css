@@ -1,0 +1,205 @@
+/* DungeonDra Design Tokens - CSS Custom Properties */
+/* Generated from design/system.json */
+
+:root {
+  /* Primary Colors */
+  --color-primary-blue-dark: #1e3c72;
+  --color-primary-blue-medium: #2a5298;
+  --color-primary-white: #ffffff;
+  --color-primary-gold: #ffd700;
+  --color-primary-gold-alt: #fbbf24;
+
+  /* Semantic Colors */
+  --color-success-primary: #00b894;
+  --color-success-secondary: #00a085;
+  --color-success-bright: #44ff44;
+  --color-success-modern: #4ade80;
+  --color-success-accessible: #10b981;
+
+  --color-error-primary: #ff4444;
+  --color-error-secondary: #ff6b6b;
+  --color-error-modern: #ef4444;
+  --color-error-warm: #ee5a24;
+
+  --color-warning-primary: #ffff44;
+  --color-warning-gold: #fbbf24;
+
+  --color-info-primary: #74b9ff;
+  --color-info-secondary: #0984e3;
+
+  /* Surface Colors */
+  --color-surface-dark-primary: #1e293b;
+  --color-surface-dark-secondary: #334155;
+  --color-surface-dark-deep: #0f172a;
+  --color-surface-dark-medium: #475569;
+
+  --color-surface-light-primary: #f8fafc;
+  --color-surface-light-secondary: #e2e8f0;
+  --color-surface-light-tertiary: #f1f5f9;
+
+  --color-surface-green-dark: #064e3b;
+  --color-surface-green-medium: #065f46;
+  --color-surface-green-light: #047857;
+
+  /* Text Colors */
+  --color-text-primary: #1e293b;
+  --color-text-secondary: #94a3b8;
+  --color-text-tertiary: #cbd5e1;
+  --color-text-light: #e2e8f0;
+
+  /* Special Colors */
+  --color-border: #cbd5e1;
+  --color-violet-primary: #a855f7;
+  --color-violet-secondary: #9333ea;
+  --color-violet-dark: #581c87;
+  --color-violet-light: #ede9fe;
+
+  --color-orange-primary: #f59e0b;
+  --color-orange-dark: #92400e;
+  --color-orange-light: #fef3c7;
+
+  /* Game Specific Colors */
+  --color-dice-advantage: #4ade80;
+  --color-dice-disadvantage: #ef4444;
+  --color-dice-normal: #3b82f6;
+
+  --color-dice-result-nat20: #fbbf24;
+  --color-dice-result-nat1: #ef4444;
+  --color-dice-result-normal: #f1f5f9;
+
+  --color-game-alive: #10b981;
+  --color-game-wounded: #f59e0b;
+  --color-game-dead: #ef4444;
+  --color-game-unconscious: #94a3b8;
+
+  /* Spacing */
+  --spacing-micro-xs: 4px;
+  --spacing-micro-s: 5px;
+  --spacing-micro-m: 6px;
+  --spacing-micro-l: 8px;
+
+  --spacing-small-xs: 10px;
+  --spacing-small-s: 12px;
+  --spacing-small-m: 15px;
+
+  --spacing-medium-xs: 16px;
+  --spacing-medium-s: 20px;
+  --spacing-medium-m: 24px;
+
+  --spacing-large-s: 30px;
+  --spacing-large-m: 40px;
+
+  --spacing-gap-xs: 4px;
+  --spacing-gap-s: 6px;
+  --spacing-gap-m: 8px;
+  --spacing-gap-l: 10px;
+  --spacing-gap-xl: 12px;
+  --spacing-gap-2xl: 16px;
+  --spacing-gap-3xl: 20px;
+
+  /* Typography */
+  --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-family-monospace: 'Courier New', monospace;
+
+  --font-size-xs: 10px;
+  --font-size-s: 12px;
+  --font-size-base: 14px;
+  --font-size-m: 16px;
+  --font-size-l: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 3rem;
+
+  --font-weight-normal: 600;
+  --font-weight-bold: 700;
+
+  /* Text Shadows */
+  --text-shadow-basic: 0 1px 2px rgba(0,0,0,0.5);
+  --text-shadow-medium: 0 2px 4px rgba(0,0,0,0.5);
+  --text-shadow-strong: 2px 2px 4px rgba(0,0,0,0.5);
+  --text-shadow-glow-gold: 0 0 10px #fbbf24;
+  --text-shadow-glow-gold-strong: 0 0 20px #fbbf24, 0 0 30px #fbbf24;
+
+  /* Border Radius */
+  --border-radius-small: 6px;
+  --border-radius-medium: 8px;
+  --border-radius-large: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-circular: 50%;
+
+  /* Shadows */
+  --shadow-subtle: 0 2px 4px rgba(0,0,0,0.2);
+  --shadow-basic: 0 4px 8px rgba(0,0,0,0.3);
+  --shadow-medium: 0 8px 25px rgba(0,0,0,0.3);
+  --shadow-medium-alt: 0 8px 32px rgba(0,0,0,0.1);
+  --shadow-deep: 0 20px 40px rgba(0,0,0,0.4);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.2);
+
+  --shadow-inset-subtle: inset 0 1px 2px rgba(255,255,255,0.8);
+  --shadow-inset-medium: inset 0 1px 3px rgba(255,255,255,0.2);
+  --shadow-inset-strong: inset 0 4px 8px rgba(0,0,0,0.3);
+
+  --shadow-drop: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+
+  /* Effects */
+  --backdrop-filter-blur: blur(10px);
+
+  --opacity-10: 0.1;
+  --opacity-15: 0.15;
+  --opacity-20: 0.2;
+  --opacity-30: 0.3;
+  --opacity-50: 0.5;
+  --opacity-60: 0.6;
+  --opacity-90: 0.9;
+
+  /* Transitions */
+  --transition-fast: 0.1s;
+  --transition-quick: 0.3s;
+  --transition-medium: 0.5s;
+  --transition-slow: 0.8s;
+  --transition-slower: 1s;
+  --transition-very-slow: 1.5s;
+  --transition-ultra-slow: 3s;
+
+  --easing-linear: linear;
+  --easing-ease: ease;
+  --easing-ease-in-out: ease-in-out;
+  --easing-ease-out: ease-out;
+  --easing-bounce: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --easing-elastic: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --transition-all-quick: all 0.3s ease;
+  --transition-width: width 0.3s ease;
+  --transition-transform: transform 0.3s ease;
+
+  /* Transforms */
+  --transform-up-small: translateY(-2px);
+  --transform-up-medium: translateY(-4px);
+  --transform-scale-hover: scale(1.05);
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  --gradient-dice-container: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  --gradient-dice-table: linear-gradient(45deg, #064e3b 0%, #065f46 50%, #047857 100%);
+  --gradient-dice-3d: linear-gradient(145deg, #f8fafc, #e2e8f0);
+
+  --gradient-button-primary: linear-gradient(45deg, #ff6b6b, #ee5a24);
+  --gradient-button-secondary: linear-gradient(45deg, #74b9ff, #0984e3);
+  --gradient-button-success: linear-gradient(45deg, #00b894, #00a085);
+
+  --gradient-health-bar: linear-gradient(90deg, #ff4444 0%, #ffff44 50%, #44ff44 100%);
+
+  /* Game Specific */
+  --game-perspective: 1000px;
+  --game-z-index-overlay: 10;
+
+  /* Grid Templates */
+  --grid-dice: repeat(3, 1fr);
+  --grid-characters: repeat(auto-fill, minmax(300px, 1fr));
+  --grid-responsive: repeat(2, 1fr);
+
+  /* Breakpoints (for reference in JS) */
+  --breakpoint-mobile: 640px;
+  --breakpoint-tablet: 768px;
+}

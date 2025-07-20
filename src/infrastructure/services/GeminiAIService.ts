@@ -252,6 +252,7 @@ OPCIONES:
   }
 
   private async generateWithPrompt(prompt: string, retries = 3): Promise<StoryGenerationResponse> {
+    // Manejo robusto de errores con retry automático y fallback content
     const startTime = Date.now();
 
     for (let attempt = 1; attempt <= retries; attempt++) {
@@ -290,7 +291,7 @@ OPCIONES:
           }
         }
         
-        // Esperar antes del siguiente intento (backoff exponencial)
+        // Esperar antes del siguiente retry (backoff exponencial)
         const delay = Math.pow(2, attempt - 1) * 2000; // 2s, 4s, 8s
         console.log(`Esperando ${delay}ms antes del siguiente intento...`);
         await new Promise(resolve => setTimeout(resolve, delay));
@@ -313,7 +314,7 @@ OPCIONES:
     console.log('Parsed story length:', story.length);
 
     // Parse options with dice requirements
-    let optionsMatch = text.match(/OPCIONES:\s*([\s\S]*?)$/i);
+    const optionsMatch = text.match(/OPCIONES:\s*([\s\S]*?)$/i);
     let options: string[] = [];
     let diceRequests: DiceRequest[] = [];
     
@@ -323,7 +324,7 @@ OPCIONES:
         line.trim().match(/^\d+\.\s+/)
       );
       
-      optionLines.forEach((line, index) => {
+      optionLines.forEach((line) => {
         // Parsear línea: "1. Acción - DADO: tipo:habilidad:dc:notación (descripción)"
         const cleanLine = line.replace(/^\d+\.\s*/, '').trim();
         
@@ -367,13 +368,14 @@ OPCIONES:
     }
 
     if (options.length === 0) {
+      // Fallback content cuando IA no responde correctamente
       options = [
         'Explorar el área con cautela',
         'Avanzar directamente hacia el objetivo',
         'Buscar información adicional antes de actuar'
       ];
       
-      // Agregar dados por defecto
+      // Agregar dados por defecto con fallback dice requests
       diceRequests = [
         { type: 'ability', ability: 'perception', difficulty: 12, description: 'Explorar con cautela', diceNotation: '1d20+1' },
         { type: 'ability', ability: 'athletics', difficulty: 15, description: 'Avanzar directamente', diceNotation: '1d20+2' },
@@ -393,9 +395,9 @@ OPCIONES:
 
   async testConnection(): Promise<boolean> {
     try {
-      const result = await this.model.generateContent('Test');
+      await this.model.generateContent('Test');
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

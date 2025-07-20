@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import DiceAnimation from './DiceAnimation';
 import RealisticDiceAnimation from './RealisticDiceAnimation';
 import DiceResultNarrator from './DiceResultNarrator';
 

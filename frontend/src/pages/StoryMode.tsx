@@ -34,7 +34,7 @@ export const StoryMode: React.FC = () => {
       const charactersData = await apiService.getCharacters();
       const aliveCharacters = charactersData.filter(char => char.isAlive);
       setCharacters(aliveCharacters);
-    } catch (err) {
+    } catch {
       setError('Error al cargar personajes');
     }
   };

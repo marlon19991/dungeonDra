@@ -35,8 +35,7 @@ export const RealisticDiceAnimation: React.FC<RealisticDiceAnimationProps> = ({
   const [currentValues, setCurrentValues] = useState<number[]>([]);
   const [finalValues, setFinalValues] = useState<number[]>([]);
   const [animationPhase, setAnimationPhase] = useState<'idle' | 'throwing' | 'rolling' | 'settling' | 'complete'>('idle');
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const diceCount = advantage || disadvantage ? 2 : count;
 
