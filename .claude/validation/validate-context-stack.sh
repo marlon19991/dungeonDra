@@ -229,15 +229,15 @@ echo "🤖 VERIFICANDO INTEGRACIÓN IA"
 echo "============================="
 
 # Check AI error handling
-ai_error_handling=$(grep -r "retry\|fallback\|reintento" src/infrastructure/services/GeminiAIService.ts 2>/dev/null | wc -l || echo "0")
+ai_error_handling=$(grep -r "retry\|fallback\|reintento\|for.*attempt\|catch.*error\|backoff\|setTimeout" src/infrastructure/services/GeminiAIService.ts 2>/dev/null | wc -l || echo "0")
 ai_error_handling=$(echo "$ai_error_handling" | tr -d ' ')
 
 echo "🎯 Manejo de errores IA: $ai_error_handling instances"
-if [ "$ai_error_handling" -gt 3 ]; then
-    echo "✅ PASS (objetivo: >3)"
+if [ "$ai_error_handling" -gt 5 ]; then
+    echo "✅ PASS (objetivo: >5)"
     ((passed++))
 else
-    echo "❌ FAIL (objetivo: >3)"
+    echo "❌ FAIL (objetivo: >5)"
     ((failed++))
 fi
 
@@ -255,6 +255,75 @@ else
 fi
 
 # Final results
+echo ""
+echo "🎮 VERIFICANDO REGLAS D&D ESPECÍFICAS"
+echo "====================================="
+
+# Check ability score validation (8-18 range)
+ability_validation=$(grep -r "8.*18\|18.*8" src/domain/entities/Character.ts 2>/dev/null | wc -l || echo "0")
+ability_validation=$(echo "$ability_validation" | tr -d ' ')
+
+echo "🎯 Validación ability scores (8-18): $ability_validation instances"
+if [ "$ability_validation" -gt 0 ]; then
+    echo "✅ PASS (objetivo: >0)"
+    ((passed++))
+else
+    echo "❌ FAIL (objetivo: >0)"
+    ((failed++))
+fi
+
+# Check level validation (1-20 range)
+level_validation=$(grep -r "level.*1.*20\|level.*20.*1" src/domain/entities/Character.ts 2>/dev/null | wc -l || echo "0")
+level_validation=$(echo "$level_validation" | tr -d ' ')
+
+echo "🎯 Validación level (1-20): $level_validation instances"
+if [ "$level_validation" -gt 0 ]; then
+    echo "✅ PASS (objetivo: >0)"
+    ((passed++))
+else
+    echo "❌ FAIL (objetivo: >0)"
+    ((failed++))
+fi
+
+# Check proficiency bonus calculation
+proficiency_calculation=$(grep -r "Math.ceil.*level.*4.*1\|getProficiencyBonus" src/domain/entities/Character.ts 2>/dev/null | wc -l || echo "0")
+proficiency_calculation=$(echo "$proficiency_calculation" | tr -d ' ')
+
+echo "🎯 Cálculo proficiency bonus: $proficiency_calculation instances"
+if [ "$proficiency_calculation" -gt 0 ]; then
+    echo "✅ PASS (objetivo: >0)"
+    ((passed++))
+else
+    echo "❌ FAIL (objetivo: >0)"
+    ((failed++))
+fi
+
+# Check critical hit mechanics (d20 = 20)
+critical_mechanics=$(grep -r "20.*critical\|critical.*20\|nat.*20\|natural.*20" frontend/src/components/ 2>/dev/null | wc -l || echo "0")
+critical_mechanics=$(echo "$critical_mechanics" | tr -d ' ')
+
+echo "🎯 Mecánicas críticas (nat 20): $critical_mechanics instances"
+if [ "$critical_mechanics" -gt 2 ]; then
+    echo "✅ PASS (objetivo: >2)"
+    ((passed++))
+else
+    echo "❌ FAIL (objetivo: >2)"
+    ((failed++))
+fi
+
+# Check D&D class skills implementation
+class_skills=$(grep -r "getDefaultSkillsForClass\|ClassSkills" src/domain/ 2>/dev/null | wc -l || echo "0")
+class_skills=$(echo "$class_skills" | tr -d ' ')
+
+echo "🎯 Sistema class skills: $class_skills instances"
+if [ "$class_skills" -gt 3 ]; then
+    echo "✅ PASS (objetivo: >3)"
+    ((passed++))
+else
+    echo "❌ FAIL (objetivo: >3)"
+    ((failed++))
+fi
+
 echo ""
 echo "📊 RESULTADOS FINALES"
 echo "===================="

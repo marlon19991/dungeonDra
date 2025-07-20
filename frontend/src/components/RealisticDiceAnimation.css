@@ -4,7 +4,7 @@
   align-items: center;
   padding: 20px;
   perspective: 1000px;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background: var(--gradient-dice-container);
   border-radius: 16px;
   box-shadow: 
     0 20px 40px rgba(0, 0, 0, 0.4),
@@ -31,7 +31,7 @@
   position: relative;
   width: 400px;
   height: 200px;
-  background: linear-gradient(45deg, #064e3b 0%, #065f46 50%, #047857 100%);
+  background: var(--gradient-dice-table);
   border-radius: 12px;
   box-shadow: 
     inset 0 4px 8px rgba(0, 0, 0, 0.3),
@@ -132,15 +132,15 @@
   position: absolute;
   width: 60px;
   height: 60px;
-  background: linear-gradient(145deg, #f8fafc, #e2e8f0);
-  border: 2px solid #cbd5e1;
+  background: var(--gradient-dice-3d);
+  border: 2px solid var(--color-text-tertiary);
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   font-weight: bold;
-  color: #1e293b;
+  color: var(--color-surface-dark-primary);
   box-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.2),
     inset 0 1px 2px rgba(255, 255, 255, 0.8);
@@ -172,7 +172,7 @@
 }
 
 .dot.active {
-  background: #1e293b;
+  background: var(--color-surface-dark-primary);
   box-shadow: 
     0 1px 2px rgba(0, 0, 0, 0.3),
     inset 0 1px 1px rgba(255, 255, 255, 0.3);
@@ -192,12 +192,12 @@
   height: 0;
   border-left: 25px solid transparent;
   border-right: 25px solid transparent;
-  border-bottom: 43px solid #e2e8f0;
+  border-bottom: 43px solid var(--color-surface-light-secondary);
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #1e293b;
+  color: var(--color-surface-dark-primary);
   font-weight: bold;
   line-height: 30px;
 }
@@ -210,15 +210,15 @@
   position: relative;
   width: 60px;
   height: 60px;
-  background: linear-gradient(145deg, #f8fafc, #e2e8f0);
-  border: 2px solid #cbd5e1;
+  background: var(--gradient-dice-3d);
+  border: 2px solid var(--color-text-tertiary);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 18px;
   font-weight: bold;
-  color: #1e293b;
+  color: var(--color-surface-dark-primary);
   box-shadow: 
     0 4px 8px rgba(0, 0, 0, 0.2),
     inset 0 2px 4px rgba(255, 255, 255, 0.8);
@@ -234,16 +234,16 @@
 }
 
 .dice-icosahedron {
-  background: linear-gradient(145deg, #fef3c7, #fbbf24);
-  border-color: #f59e0b;
-  color: #92400e;
+  background: linear-gradient(145deg, var(--color-orange-light), var(--color-primary-gold-alt));
+  border-color: var(--color-orange-primary);
+  color: var(--color-orange-dark);
   font-size: 16px;
 }
 
 .dice-percentile {
-  background: linear-gradient(145deg, #ede9fe, #a855f7);
-  border-color: #9333ea;
-  color: #581c87;
+  background: linear-gradient(145deg, var(--color-violet-light), var(--color-violet-primary));
+  border-color: var(--color-violet-secondary);
+  color: var(--color-violet-dark);
 }
 
 /* Resultado superpuesto */
@@ -269,7 +269,7 @@
 .advantage-label {
   display: block;
   font-size: 10px;
-  color: #4ade80;
+  color: var(--color-dice-advantage);
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -278,7 +278,7 @@
 .disadvantage-label {
   display: block;
   font-size: 10px;
-  color: #ef4444;
+  color: var(--color-error-modern);
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -288,7 +288,7 @@
 .final-result {
   margin-top: 20px;
   text-align: center;
-  color: #f1f5f9;
+  color: var(--color-surface-light-tertiary);
 }
 
 .total-calculation {
@@ -302,25 +302,25 @@
 
 .critical-success {
   font-size: 16px;
-  color: #fbbf24;
+  color: var(--color-primary-gold-alt);
   font-weight: bold;
   animation: criticalGlow 1s ease-in-out infinite alternate;
 }
 
 .critical-failure {
   font-size: 16px;
-  color: #ef4444;
+  color: var(--color-error-modern);
   font-weight: bold;
   animation: criticalShake 0.5s ease-in-out;
 }
 
 @keyframes criticalGlow {
   0% { 
-    text-shadow: 0 0 10px #fbbf24;
+    text-shadow: 0 0 10px var(--color-primary-gold-alt);
     transform: scale(1);
   }
   100% { 
-    text-shadow: 0 0 20px #fbbf24, 0 0 30px #fbbf24;
+    text-shadow: 0 0 20px var(--color-primary-gold-alt), 0 0 30px var(--color-primary-gold-alt);
     transform: scale(1.05);
   }
 }
@@ -335,14 +335,14 @@
 .dice-info {
   margin-top: 16px;
   text-align: center;
-  color: #94a3b8;
+  color: var(--color-text-secondary);
 }
 
 .dice-type-label {
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #e2e8f0;
+  color: var(--color-surface-light-secondary);
 }
 
 .rolling-indicator {

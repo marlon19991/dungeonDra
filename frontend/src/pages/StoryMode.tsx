@@ -583,21 +583,31 @@ export const StoryMode: React.FC = () => {
 
   return (
     <div>
-      {/* Navigation */}
-      <nav className="navigation">
-        <button
-          className={`nav-button ${currentView === 'list' ? 'active' : ''}`}
-          onClick={() => setCurrentView('list')}
-        >
-          📚 Lista de Historias
-        </button>
-        <button
-          className={`nav-button ${currentView === 'create' ? 'active' : ''}`}
-          onClick={() => setCurrentView('create')}
-        >
-          ➕ Nueva Historia
-        </button>
-      </nav>
+      {/* Header del modo historia */}
+      <div className="card" style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <h1 style={{ color: '#fbbf24', marginBottom: '10px' }}>
+          🐉 Aventuras de Calabozos y Dragones
+        </h1>
+        <p style={{ opacity: 0.9 }}>
+          Crea y vive aventuras épicas generadas por IA con dados 3D realistas
+        </p>
+        
+        {/* Navegación simplificada dentro del juego */}
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '15px' }}>
+          <button
+            className={`button ${currentView === 'list' ? '' : 'secondary'}`}
+            onClick={() => setCurrentView('list')}
+          >
+            📚 Mis Historias
+          </button>
+          <button
+            className={`button ${currentView === 'create' ? '' : 'secondary'}`}
+            onClick={() => setCurrentView('create')}
+          >
+            ➕ Nueva Aventura
+          </button>
+        </div>
+      </div>
 
       {renderContent()}
     </div>

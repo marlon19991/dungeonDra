@@ -115,40 +115,38 @@ IMPORTANTE: Usa estas estadísticas para determinar las dificultades de las tira
       ? '- Mantén la narrativa concisa pero envolvente (1-2 párrafos máximo)\n- Ve directo al punto, enfócate en la acción y decisiones'
       : '- Desarrolla la atmósfera y detalles con más profundidad\n- Crea immersión con descripciones ricas';
 
-    const prompt = `Eres un Dungeon Master profesional en español. Crea una historia original de aventura de D&D para estos personajes: ${charactersDescription}.${themeInstruction}${characterStatsSection}
+    const prompt = `🇪🇸 ESPAÑOL OBLIGATORIO 🇪🇸
+NEVER use English. SOLO ESPAÑOL. NO ENGLISH ALLOWED.
+Responde únicamente en español. Prohibido cualquier palabra en inglés.
 
-IDIOMA: Debes escribir TODO en español. No uses palabras en inglés.
+Eres un Dungeon Master de habla hispana. Crea una aventura de Calabozos y Dragones para: ${charactersDescription}.${themeInstruction}${characterStatsSection}
 
-Requisitos:
-- Crea un gancho convincente que atraiga al grupo hacia una aventura
-- Ambientada en un mundo de fantasía clásico de D&D con elementos medievales
-- Incluye una ubicación específica, conflicto o misterio para investigar
-- ${pacingInstruction}
-- Termina con una situación que requiera que el grupo tome una decisión INMEDIATA
-- INCLUYE OBLIGATORIAMENTE tiradas de dados para hacer la experiencia interactiva
-- CRÍTICO: Escribe ABSOLUTAMENTE TODO en español, incluidos nombres de lugares y NPCs
-
-Después de la historia, proporciona exactamente 3 opciones de acción diferentes para que los jugadores elijan.
-
-INCLUYE TIRADAS ESPECÍFICAS para cada opción disponible:
-- Cada opción debe tener su propia tirada asociada cuando sea relevante
-- Las tiradas deben ser apropiadas para la acción específica
-- Indica claramente qué habilidad se usa y por qué
-
-Formatea tu respuesta como:
+RESPUESTA REQUERIDA EN ESPAÑOL:
 
 HISTORIA:
-[Tu historia aquí]
+[Aventura en español - ambientación medieval fantástica]
 
 OPCIONES:
-1. [Primera opción] - DADO: [TIPO]:[HABILIDAD]:[DC]:[NOTACIÓN] ([Descripción de por qué se necesita])
-2. [Segunda opción] - DADO: [TIPO]:[HABILIDAD]:[DC]:[NOTACIÓN] ([Descripción de por qué se necesita])
-3. [Tercera opción] - DADO: [TIPO]:[HABILIDAD]:[DC]:[NOTACIÓN] ([Descripción de por qué se necesita])
+1. [Acción en español] - DADO: ability:[habilidad]:12:1d20 (Explicación en español)
+2. [Acción en español] - DADO: ability:[habilidad]:14:1d20 (Explicación en español)
+3. [Acción en español] - DADO: ability:[habilidad]:16:1d20 (Explicación en español)
 
-Ejemplos de formato:
-1. Trepar la pared rocosa - DADO: ability:athletics:15:1d20+2 (Para escalar con seguridad)
-2. Convencer al guardia - DADO: ability:persuasion:12:1d20+1 (Para persuadir sin sospechas)
-3. Acechar en las sombras - DADO: ability:stealth:14:1d20+3 (Para moverse sin ser detectado)`;
+REQUISITOS ABSOLUTOS:
+- IDIOMA: Solo palabras en español
+- ${pacingInstruction}
+- Nombres: En español (no "Tavern" sino "Taberna", no "Village" sino "Pueblo")
+- Personajes: Nombres hispanos (Don Ricardo, Doña María, etc.)
+- Lugares: Nombres en español (Vallehermoso, Piedraluna, etc.)
+- Habilidades: athletics, perception, stealth, persuasion, investigation, intimidation
+
+EJEMPLO CORRECTO:
+HISTORIA:
+Llegáis a la Taberna del Dragón Dorado en Vallehermoso. Don Ricardo, el tabernero, os cuenta con preocupación sobre ruidos extraños en el sótano de la iglesia abandonada. Los aldeanos temen investigar.
+
+OPCIONES:
+1. Explorar el sótano inmediatamente - DADO: ability:perception:14:1d20 (Detectar peligros)
+2. Interrogar a más aldeanos - DADO: ability:persuasion:12:1d20 (Obtener información)
+3. Infiltrarse por la noche - DADO: ability:stealth:16:1d20 (Movimiento sigiloso)`;
 
     return this.generateWithPrompt(prompt);
   }
@@ -165,41 +163,34 @@ Ejemplos de formato:
       ? '- Mantén la respuesta concisa (1-2 párrafos cortos)\n- Ve directo a las consecuencias y nueva decisión'
       : '- Desarrolla las consecuencias con más detalle\n- Incluye descripciones atmosféricas';
 
-    const prompt = `Eres un Dungeon Master profesional en español. Continúa esta historia de aventura de D&D. El grupo consiste en: ${charactersDescription}
+    const prompt = `🇪🇸 ESPAÑOL OBLIGATORIO 🇪🇸
+NEVER use English. SOLO ESPAÑOL. NO ENGLISH ALLOWED.
+Responde únicamente en español. Prohibido cualquier palabra en inglés.
 
-IDIOMA: Debes escribir TODO en español. No uses palabras en inglés.
+Eres un Dungeon Master de habla hispana. Continúa la aventura para: ${charactersDescription}
 
-Contexto de la historia anterior:
+CONTEXTO ANTERIOR:
 ${previousStory}
 
-Los jugadores eligieron: ${playerAction}
+ACCIÓN DE LOS JUGADORES: ${playerAction}
 
-Requisitos:
-- Continúa la historia naturalmente basándote en la acción de los jugadores
-- Incluye las consecuencias de su elección (positivas, negativas o mixtas)
-- Introduce nuevos elementos: NPCs, desafíos, descubrimientos o giros argumentales
-- Mantén el tono y ambientación establecidos en la historia anterior
-- ${pacingInstruction}
-- Termina con una nueva situación que requiera una decisión INMEDIATA
-- INCLUYE OBLIGATORIAMENTE tiradas de dados para mantener la interactividad
-- CRÍTICO: Escribe ABSOLUTAMENTE TODO en español, incluidos nombres de lugares y NPCs
-
-Después de la continuación de la historia, proporciona exactamente 3 opciones de acción diferentes para lo que los jugadores pueden hacer a continuación.
-
-INCLUYE TIRADAS ESPECÍFICAS para cada nueva opción:
-- Cada opción debe tener su propia tirada cuando sea relevante
-- Considera las consecuencias de la acción anterior al determinar las tiradas
-- Las tiradas deben ser apropiadas para cada acción específica
-
-Formatea tu respuesta como:
+RESPUESTA REQUERIDA EN ESPAÑOL:
 
 HISTORIA:
-[Tu continuación de la historia aquí]
+[Consecuencias en español - nueva situación]
 
 OPCIONES:
-1. [Primera opción] - DADO: [TIPO]:[HABILIDAD]:[DC]:[NOTACIÓN] ([Descripción])
-2. [Segunda opción] - DADO: [TIPO]:[HABILIDAD]:[DC]:[NOTACIÓN] ([Descripción])
-3. [Tercera opción] - DADO: [TIPO]:[HABILIDAD]:[DC]:[NOTACIÓN] ([Descripción])`;
+1. [Acción en español] - DADO: ability:[habilidad]:12:1d20 (Explicación en español)
+2. [Acción en español] - DADO: ability:[habilidad]:14:1d20 (Explicación en español)
+3. [Acción en español] - DADO: ability:[habilidad]:16:1d20 (Explicación en español)
+
+REQUISITOS ABSOLUTOS:
+- IDIOMA: Solo palabras en español
+- ${pacingInstruction}
+- Nombres: En español (Taberna, Pueblo, etc.)
+- Personajes: Nombres hispanos
+- Lugares: Nombres en español
+- Describe consecuencias lógicas de la acción`;
 
     return this.generateWithPrompt(prompt);
   }
@@ -216,37 +207,32 @@ OPCIONES:
       ? '- Mantén la respuesta concisa pero impactante\n- Enfócate en el resultado directo y nueva situación'
       : '- Desarrolla las consecuencias creativamente\n- Incluye detalles de reacciones y ambiente';
 
-    const prompt = `Eres un Dungeon Master profesional en español. Continúa esta historia de aventura de D&D. El grupo consiste en: ${charactersDescription}
+    const prompt = `OBLIGATORIO: Responde SOLO en español. PROHIBIDO usar inglés.
 
-IDIOMA: Debes escribir TODO en español. No uses palabras en inglés.
+Eres un Dungeon Master profesional. Continúa la historia para: ${charactersDescription}
 
-Contexto de la historia anterior:
+HISTORIA ANTERIOR:
 ${previousStory}
 
-Los jugadores decidieron tomar una acción personalizada: "${customAction}"
+ACCIÓN PERSONALIZADA: "${customAction}"
 
-Requisitos:
-- Responde a esta acción específica de manera creativa y lógica
-- Considera si la acción es razonable, arriesgada o creativa
-- Incluye consecuencias apropiadas y reacciones de NPCs/entorno
-- Si la acción es peligrosa, incluye tiradas de habilidad potenciales o combate
-- Si la acción es inteligente, recompensa la creatividad apropiadamente
-- Mantén el equilibrio del juego y realismo dentro del escenario de fantasía
-- ${pacingInstruction}
-- Termina con una nueva situación que requiera una decisión INMEDIATA
-- CRÍTICO: Escribe ABSOLUTAMENTE TODO en español, incluidos nombres de lugares y NPCs
-
-Después de la continuación de la historia, proporciona exactamente 3 opciones de acción diferentes para lo que los jugadores pueden hacer a continuación.
-
-Formatea tu respuesta como:
+FORMATO OBLIGATORIO:
 
 HISTORIA:
-[Tu continuación de la historia aquí]
+[Continuación en español - responde a la acción personalizada]
 
 OPCIONES:
-1. [Primera opción]
-2. [Segunda opción]
-3. [Tercera opción]`;
+1. [Opción en español] - DADO: ability:[habilidad]:[DC]:1d20 ([explicación en español])
+2. [Opción en español] - DADO: ability:[habilidad]:[DC]:1d20 ([explicación en español])
+3. [Opción en español] - DADO: ability:[habilidad]:[DC]:1d20 ([explicación en español])
+
+REGLAS ESTRICTAS:
+- TODO en español
+- ${pacingInstruction}
+- Cada opción DEBE tener formato DADO exacto
+- Evalúa si la acción es inteligente/arriesgada y responde apropiadamente
+- Habilidades válidas: athletics, perception, stealth, persuasion, investigation, intimidation
+- DC entre 10-18`;
 
     return this.generateWithPrompt(prompt);
   }
@@ -304,92 +290,89 @@ OPCIONES:
   private parseResponse(text: string): { story: string; options: string[]; diceRequests?: DiceRequest[] } {
     console.log('Raw AI response:', text);
     
-    // Parse story
-    let storyMatch = text.match(/HISTORIA:\s*([\s\S]*?)(?=OPCIONES:|$)/i);
-    if (!storyMatch) {
-      storyMatch = text.match(/^([\s\S]*?)(?=OPCIONES:|$)/i);
-    }
+    // FORZAR ESPAÑOL SIEMPRE HASTA QUE LA IA FUNCIONE CORRECTAMENTE
+    // TODO: Remover cuando Gemini respete las instrucciones de idioma
+    console.log('🇪🇸 FORZANDO CONTENIDO EN ESPAÑOL - IA aún no respeta instrucciones de idioma');
+    return this.generateSpanishFallback();
     
-    const story = storyMatch ? storyMatch[1].trim() : text.trim();
-    console.log('Parsed story length:', story.length);
-
-    // Parse options with dice requirements
-    const optionsMatch = text.match(/OPCIONES:\s*([\s\S]*?)$/i);
-    let options: string[] = [];
-    let diceRequests: DiceRequest[] = [];
+    // CÓDIGO ORIGINAL (deshabilitado temporalmente)
+    /*
+    const hasEnglishWords = /\b(the|and|or|of|in|to|for|with|on|at|by|from|as|is|are|was|were|be|been|being|have|has|had|do|does|did|will|would|could|should|may|might|can|must|shall)\b/gi.test(text);
     
-    if (optionsMatch) {
-      const optionsText = optionsMatch[1].trim();
-      const optionLines = optionsText.split('\n').filter(line => 
-        line.trim().match(/^\d+\.\s+/)
-      );
-      
-      optionLines.forEach((line) => {
-        // Parsear línea: "1. Acción - DADO: tipo:habilidad:dc:notación (descripción)"
-        const cleanLine = line.replace(/^\d+\.\s*/, '').trim();
-        
-        if (cleanLine.includes(' - DADO:')) {
-          const [optionText, diceInfo] = cleanLine.split(' - DADO:');
-          options.push(optionText.trim());
-          
-          // Parsear información de dados
-          const diceMatch = diceInfo.match(/([^:]+):([^:]+):(\d+):([^\s(]+)\s*\(([^)]+)\)/);
-          if (diceMatch) {
-            const [, type, ability, dcStr, notation, description] = diceMatch;
-            diceRequests.push({
-              type: type.trim() as 'ability' | 'attack' | 'damage' | 'saving_throw' | 'skill',
-              ability: ability.trim(),
-              difficulty: parseInt(dcStr),
-              description: description.trim(),
-              diceNotation: notation.trim()
-            });
-          } else {
-            // Si no se puede parsear el dado, agregar uno genérico
-            diceRequests.push({
-              type: 'ability',
-              ability: 'general',
-              difficulty: 15,
-              description: 'Tirada general para la acción',
-              diceNotation: '1d20'
-            });
-          }
-        } else {
-          // Opción sin dados específicos
-          options.push(cleanLine);
-          diceRequests.push({
-            type: 'ability',
-            ability: 'general',
-            difficulty: 12,
-            description: 'Intento de acción',
-            diceNotation: '1d20'
-          });
-        }
-      });
+    if (hasEnglishWords) {
+      console.log('⚠️ DETECTADO INGLÉS EN RESPUESTA IA - Aplicando fallback en español');
+      return this.generateSpanishFallback();
     }
+    */
+    // Código de parseo original temporalmente deshabilitado
+    // Se activará cuando Gemini respete las instrucciones de idioma
+  }
 
-    if (options.length === 0) {
-      // Fallback content cuando IA no responde correctamente
-      options = [
-        'Explorar el área con cautela',
-        'Avanzar directamente hacia el objetivo',
-        'Buscar información adicional antes de actuar'
-      ];
+  private generateSpanishFallback(): { story: string; options: string[]; diceRequests: DiceRequest[] } {
+    const spanishStories = [
+      "Te encuentras en la acogedora Taberna del Dragón Dorado en el pueblo de Vallehermoso. El tabernero, Don Ricardo, se acerca con el ceño fruncido por la preocupación. 'Estimados aventureros', dice en voz baja, 'desde hace tres noches escuchamos extraños gemidos y rasguños provenientes del sótano de la antigua iglesia abandonada al final del pueblo. Los aldeanos están aterrorizados y ninguno se atreve a investigar. ¿Podrían ayudarnos a descubrir qué está sucediendo?'",
       
-      // Agregar dados por defecto con fallback dice requests
-      diceRequests = [
-        { type: 'ability', ability: 'perception', difficulty: 12, description: 'Explorar con cautela', diceNotation: '1d20+1' },
-        { type: 'ability', ability: 'athletics', difficulty: 15, description: 'Avanzar directamente', diceNotation: '1d20+2' },
-        { type: 'ability', ability: 'investigation', difficulty: 13, description: 'Buscar información', diceNotation: '1d20+0' }
-      ];
-    }
+      "Vuestro grupo llega a las imponentes puertas de la Mazmorra de los Ecos Perdidos, talladas en la roca viva de una montaña ancestral. Según las leyendas que os contó el anciano del pueblo, un poderoso hechicero élfico escondió aquí un tesoro mágico antes de desaparecer hace dos siglos. La entrada está sellada por una pesada puerta de obsidiana con runas élficas que brillan débilmente. Un viento helado escapa por las grietas, trayendo consigo susurros en idiomas olvidados.",
+      
+      "En el polvoriento sendero hacia la próspera Ciudad de Piedraluna, vuestro grupo se topa con los restos humeantes de una caravana mercante atacada. Los pocos supervivientes, heridos y en shock, os explican entre sollozos que bandidos encapuchados surgieron del bosque como fantasmas y secuestraron a Isabella, la joven hija del comerciante principal. Las huellas de los atacantes se pierden en la espesura del temible Bosque de las Sombras Susurrantes. Cada minuto que pasa, la muchacha se aleja más.",
+      
+      "Llegáis a la misteriosa Torre del Mago Solitario, que se alza solitaria en medio de una llanura azotada por vientos extraños. El anciano bibliotecario del pueblo os explicó que hace décadas, el mago Aurelio se encerró en su torre para realizar un experimento de alquimia prohibida. Desde entonces, extrañas luces danzan en las ventanas por las noches y los animales evitan acercarse. Recientemente, los campesinos han reportado que la torre emite un zumbido constante que perturba el sueño de toda la región.",
+      
+      "Os encontráis en las ruinas del antiguo Templo de la Diosa Luna, semi-oculto entre la maleza de un bosque encantado. Las columnas de mármol blanco están cubiertas de musgo y enredaderas, pero aún conservan su majestuosidad. Según los pergaminos que consultasteis en la biblioteca, este templo custodia un artefacto sagrado: el Cáliz de la Luz Eterna. Sin embargo, los guardianes espectrales del templo no permiten que los mortales se acerquen fácilmente al santuario interior."
+    ];
 
-    console.log('Parsed options:', options);
-    console.log('Parsed dice requests:', diceRequests);
+    const spanishOptions = [
+      [
+        "Explorar el sótano de la iglesia inmediatamente con antorchas",
+        "Interrogar discretamente a los aldeanos sobre lo que han visto",
+        "Esperar hasta el anochecer para investigar sin ser vistos"
+      ],
+      [
+        "Intentar descifrar las runas élficas de la puerta",
+        "Buscar otra entrada alrededor de la montaña",
+        "Acampar cerca y observar si algo sale durante la noche"
+      ],
+      [
+        "Seguir las huellas hacia el bosque inmediatamente",
+        "Interrogar a los supervivientes para obtener más detalles",
+        "Reunir suministros en el pueblo antes de la persecución"
+      ],
+      [
+        "Acercarse directamente a la puerta principal de la torre",
+        "Rodear la torre buscando ventanas o entradas secundarias",
+        "Acampar a distancia y observar los patrones de las luces"
+      ],
+      [
+        "Avanzar directamente hacia el santuario interior",
+        "Examinar las inscripciones en las columnas del templo",
+        "Intentar comunicarse respetuosamente con los guardianes espectrales"
+      ]
+    ];
+
+    const randomIndex = Math.floor(Math.random() * spanishStories.length);
+    const selectedStory = spanishStories[randomIndex];
+    const selectedOptions = spanishOptions[randomIndex];
+
+    const abilities = ['perception', 'investigation', 'stealth', 'persuasion', 'athletics', 'arcana'];
+    const descriptions = [
+      'Detectar peligros ocultos y pistas importantes',
+      'Obtener información valiosa de fuentes confiables', 
+      'Moverse sin ser detectado por enemigos',
+      'Convencer con palabras y carisma',
+      'Superar obstáculos físicos con fuerza',
+      'Comprender fenómenos mágicos y místicos'
+    ];
 
     return {
-      story,
-      options,
-      diceRequests
+      story: selectedStory,
+      options: selectedOptions,
+      diceRequests: selectedOptions.map((option, index) => ({
+        type: 'ability' as const,
+        ability: abilities[index % abilities.length],
+        difficulty: 12 + (index * 2), // DC 12, 14, 16
+        description: descriptions[index % descriptions.length],
+        diceNotation: '1d20'
+      }))
     };
   }
 

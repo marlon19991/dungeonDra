@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  background: var(--gradient-dice-container);
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   margin: 10px;
@@ -36,7 +36,7 @@
   justify-content: center;
   width: 80px;
   height: 80px;
-  background: linear-gradient(145deg, #475569, #334155);
+  background: linear-gradient(145deg, var(--color-surface-dark-medium), var(--color-surface-dark-secondary));
   border-radius: 12px;
   box-shadow: 
     0 4px 8px rgba(0, 0, 0, 0.3),
@@ -82,7 +82,7 @@
   font-size: 18px;
   font-weight: bold;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-  color: #f1f5f9;
+  color: var(--color-surface-light-tertiary);
 }
 
 .dice-info {
@@ -92,7 +92,7 @@
 
 .dice-type {
   font-size: 14px;
-  color: #94a3b8;
+  color: var(--color-text-secondary);
   font-weight: 600;
   margin-bottom: 4px;
 }
@@ -119,16 +119,16 @@
   background: rgba(15, 23, 42, 0.6);
   border-radius: 6px;
   font-size: 12px;
-  color: #cbd5e1;
+  color: var(--color-text-tertiary);
 }
 
 .modifier-sign {
-  color: #10b981;
+  color: var(--color-success-accessible);
   font-weight: bold;
 }
 
 .total-result {
-  color: #fbbf24;
+  color: var(--color-primary-gold-alt);
   font-weight: bold;
 }
 
@@ -138,20 +138,20 @@
 }
 
 .nat-20 {
-  color: #fbbf24;
+  color: var(--color-primary-gold-alt);
   font-weight: bold;
   animation: glow 1s ease-in-out infinite alternate;
 }
 
 .nat-1 {
-  color: #ef4444;
+  color: var(--color-error-modern);
   font-weight: bold;
   animation: shake 0.5s ease-in-out;
 }
 
 @keyframes glow {
-  0% { text-shadow: 0 0 5px #fbbf24; }
-  100% { text-shadow: 0 0 20px #fbbf24, 0 0 30px #fbbf24; }
+  0% { text-shadow: 0 0 5px var(--color-primary-gold-alt); }
+  100% { text-shadow: 0 0 20px var(--color-primary-gold-alt), 0 0 30px var(--color-primary-gold-alt); }
 }
 
 @keyframes shake {
@@ -174,7 +174,7 @@
 }
 
 .dice.chosen {
-  border: 2px solid #fbbf24;
+  border: 2px solid var(--color-primary-gold-alt);
   box-shadow: 
     0 0 15px rgba(251, 191, 36, 0.5),
     0 4px 8px rgba(0, 0, 0, 0.3);
@@ -189,11 +189,11 @@
 
 .advantage-result {
   text-align: center;
-  color: #f1f5f9;
+  color: var(--color-surface-light-tertiary);
 }
 
 .advantage-text {
-  color: #4ade80;
+  color: var(--color-dice-advantage);
   font-weight: bold;
   font-size: 14px;
   text-transform: uppercase;
@@ -201,7 +201,7 @@
 }
 
 .disadvantage-text {
-  color: #ef4444;
+  color: var(--color-error-modern);
   font-weight: bold;
   font-size: 14px;
   text-transform: uppercase;
@@ -215,7 +215,7 @@
 }
 
 .modifier {
-  color: #10b981;
+  color: var(--color-success-accessible);
   margin-left: 8px;
 }
 

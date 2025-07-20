@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import DiceAnimation from './DiceAnimation';
+import RealisticDiceAnimation from './RealisticDiceAnimation';
 import DiceResultNarrator from './DiceResultNarrator';
 
 export interface DiceRequest {
@@ -133,7 +133,7 @@ export const InteractiveDiceRoller: React.FC<InteractiveDiceRollerProps> = ({
   }
 
   const currentRequest = diceRequests[currentRollIndex];
-  const { sides } = currentRequest ? parseDiceNotation(currentRequest.diceNotation || '1d20') : { sides: 20 };
+  const { count, sides, modifier } = currentRequest ? parseDiceNotation(currentRequest.diceNotation || '1d20') : { count: 1, sides: 20, modifier: 0 };
 
   return (
     <div className="interactive-dice-roller" style={{
@@ -179,11 +179,12 @@ export const InteractiveDiceRoller: React.FC<InteractiveDiceRollerProps> = ({
 
       {/* Dice Animation */}
       {currentRequest && (
-        <DiceAnimation
+        <RealisticDiceAnimation
           diceType={sides}
           isRolling={isRolling}
           finalValue={currentRoll?.roll}
-          modifier={currentRoll?.modifier}
+          modifier={modifier}
+          count={count}
           onRollComplete={() => {}}
         />
       )}
